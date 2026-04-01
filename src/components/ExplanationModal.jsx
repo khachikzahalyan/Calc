@@ -85,6 +85,70 @@ const ExplanationModal = ({ isOpen, onClose, type, data }) => {
 • This subnet can support ${data.value} devices`
         };
       }
+      case 'networkMask': {
+        const prefix = data.prefix;
+        const hostBits = 32 - prefix;
+        const networkBits = prefix;
+        return {
+          title: 'Subnet Mask Calculation',
+          value: data.value,
+          explanation: `The subnet mask is a 32-bit number that divides the IP address into network and host portions. Each bit is either 1 (network) or 0 (host).`,
+          formula: [
+            `Prefix: /${prefix} means ${networkBits} network bits (ones) and ${hostBits} host bits (zeros)`,
+            `Binary: ${networkBits > 0 ? '1'.repeat(Math.min(networkBits, 8)) : ''}${'0'.repeat(Math.min(8 - networkBits, 8))}.${Math.max(0, networkBits - 8) > 0 ? '1'.repeat(Math.max(0, networkBits - 8)) : ''}${'0'.repeat(Math.max(0, 8 - (networkBits - 8)))}.${Math.max(0, networkBits - 16) > 0 ? '1'.repeat(Math.max(0, networkBits - 16)) : ''}${'0'.repeat(Math.max(0, 8 - (networkBits - 16)))}.${Math.max(0, networkBits - 24) > 0 ? '1'.repeat(Math.max(0, networkBits - 24)) : ''}${'0'.repeat(Math.max(0, 8 - (networkBits - 24)))}`,
+            `Decimal representation: ${data.value}`,
+            `This mask allows for ${data.usableHosts} usable host addresses in the network`,
+          ],
+          example: `For /${prefix}:
+• Network bits: ${networkBits} (identify the network)
+• Host bits: ${hostBits} (identify the host within network)
+• Subnet Mask: ${data.value}
+• Total IPs: ${data.totalIps}
+• Usable IPs: ${data.usableHosts}
+• This means you can have ${data.usableHosts} devices on this network`
+        };
+      }
+      case 'networkAddress': {
+        return {
+          title: 'Network Address Calculation',
+          value: data.value,
+          explanation: `The network address is the first address in a network. It's calculated by performing a bitwise AND between the IP and subnet mask. All host bits are set to 0.`,
+          formula: [
+            `IP Address (binary): ${data.ipBinary || 'binary form of ' + data.ip}`,
+            `Subnet Mask (binary): Network bits = 1, Host bits = 0`,
+            `Bitwise AND: IP AND Mask = Network Address`,
+            `Result: ${data.value}`,
+            `All host bits are 0, making this the network's starting point`,
+          ],
+          example: `Network Address: ${data.value}
+• This is the first address in the network
+• It CANNOT be assigned to any device
+• Used to identify the network itself
+• Example: In class used to refer to the network as "${data.value}/${data.prefix}"`
+        };
+      }
+      case 'broadcastAddress': {
+        return {
+          title: 'Broadcast Address Calculation',
+          value: data.value,
+          explanation: `The broadcast address is the last address in a network. It's calculated by setting all host bits to 1. Packets sent here reach all devices on the network.`,
+          formula: [
+            `Network Address: ${data.networkAddress}`,
+            `Set all host bits to 1 (binary)`,
+            `Result: ${data.value}`,
+            `Total IPs in network: ${data.totalIps}`,
+            `Broadcast = Network Address + (Total IPs - 1)`,
+          ],
+          example: `Broadcast Address: ${data.value}
+• This is the last address in the network
+• Used to send messages to ALL devices
+• CANNOT be assigned to any device
+• Network size: ${data.totalIps} total IPs
+• First IP: ${data.firstUsableIp}
+• Last IP: ${data.lastUsableIp}
+• Broadcast: ${data.value}`
+        };
+      }
       default:
         return { title: 'Information', value: '', explanation: '', formula: [], example: '' };
     }

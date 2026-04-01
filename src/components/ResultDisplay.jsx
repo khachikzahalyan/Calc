@@ -18,15 +18,15 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
     setModalData(null);
   };
 
-  // Define CopyButton component
-  const CopyButton = ({ text, label }) => (
+  // Define CopyButton component - Opens explanation modal instead of copying
+  const CopyButton = ({ text, label, explainType, explainData }) => (
     <button
       className="copy-btn"
-      onClick={() => onCopy(text, label)}
-      title="Copy to clipboard"
-      aria-label={`Copy ${label}`}
+      onClick={() => explainType ? openModal(explainType, explainData) : onCopy(text, label)}
+      title={explainType ? "Click to see explanation" : "Copy to clipboard"}
+      aria-label={explainType ? `Explain ${label}` : `Copy ${label}`}
     >
-      📋
+      {explainType ? '💡' : '📋'}
     </button>
   );
 
@@ -291,7 +291,17 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
             <label>Subnet Mask</label>
             <div className="value-row">
               <span className="value">{result.mask}</span>
-              <CopyButton text={result.mask} label="Subnet Mask" />
+              <CopyButton 
+                text={result.mask} 
+                label="Subnet Mask"
+                explainType="networkMask"
+                explainData={{
+                  value: result.mask,
+                  prefix: result.prefix,
+                  usableHosts: result.usableHosts,
+                  totalIps: result.totalIps
+                }}
+              />
             </div>
             {showBinary && <div className="binary">{result.maskBinary}</div>}
           </div>
@@ -300,7 +310,19 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
             <label>Network Address</label>
             <div className="value-row">
               <span className="value">{result.network}</span>
-              <CopyButton text={result.network} label="Network Address" />
+              <CopyButton 
+                text={result.network} 
+                label="Network Address"
+                explainType="networkAddress"
+                explainData={{
+                  value: result.network,
+                  ip: result.ip,
+                  ipBinary: result.ipBinary,
+                  prefix: result.prefix,
+                  totalIps: result.totalIps,
+                  usableHosts: result.usableHosts
+                }}
+              />
             </div>
           </div>
 
@@ -308,7 +330,19 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
             <label>Broadcast Address</label>
             <div className="value-row">
               <span className="value">{result.broadcast}</span>
-              <CopyButton text={result.broadcast} label="Broadcast Address" />
+              <CopyButton 
+                text={result.broadcast} 
+                label="Broadcast Address"
+                explainType="broadcastAddress"
+                explainData={{
+                  value: result.broadcast,
+                  networkAddress: result.network,
+                  totalIps: result.totalIps,
+                  firstUsableIp: result.firstUsableIp,
+                  lastUsableIp: result.lastUsableIp,
+                  prefix: result.prefix
+                }}
+              />
             </div>
           </div>
 
