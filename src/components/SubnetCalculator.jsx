@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { calculateSubnet } from '../utils/ip';
 import { calculateVLSM } from '../utils/vlsm';
 import ResultDisplay from './ResultDisplay';
@@ -22,40 +22,26 @@ const SubnetCalculator = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [result, setResult] = useState(null);
 
-  // Memoize calculation to avoid unnecessary re-renders
-  const handleCalculate = useMemo(() => {
-    return () => {
-      if (calculatorMode === 'standard') {
-        let numSubnetsVal = null;
-        let hostsVal = null;
+  // Calculate only when button is clicked
+  const handleCalculate = () => {
+    if (calculatorMode === 'standard') {
+      let numSubnetsVal = null;
+      let hostsVal = null;
 
-        if (subnettingMode === 'subnets' && numSubnets.trim()) {
-          numSubnetsVal = parseInt(numSubnets, 10);
-        } else if (subnettingMode === 'hosts' && hostsPerSubnet.trim()) {
-          hostsVal = parseInt(hostsPerSubnet, 10);
-        }
-
-        const calcResult = calculateSubnet(ip, prefix, numSubnetsVal, hostsVal);
-        setResult(calcResult);
-      } else {
-        // VLSM Mode
-        const calcResult = calculateVLSM(ip, prefix, hostRequirements);
-        setResult(calcResult);
+      if (subnettingMode === 'subnets' && numSubnets.trim()) {
+        numSubnetsVal = parseInt(numSubnets, 10);
+      } else if (subnettingMode === 'hosts' && hostsPerSubnet.trim()) {
+        hostsVal = parseInt(hostsPerSubnet, 10);
       }
-    };
-  }, [
-    ip,
-    prefix,
-    numSubnets,
-    hostsPerSubnet,
-    subnettingMode,
-    hostRequirements,
-    calculatorMode,
-  ]);
 
-  React.useEffect(() => {
-    handleCalculate();
-  }, [handleCalculate]);
+      const calcResult = calculateSubnet(ip, prefix, numSubnetsVal, hostsVal);
+      setResult(calcResult);
+    } else {
+      // VLSM Mode
+      const calcResult = calculateVLSM(ip, prefix, hostRequirements);
+      setResult(calcResult);
+    }
+  };
 
   const handleCopyToClipboard = (text, label) => {
     navigator.clipboard.writeText(text);

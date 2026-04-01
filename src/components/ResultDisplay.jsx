@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { ipToBinary } from '../utils/ip';
 import './ResultDisplay.css';
 
 const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
   const [showBinary, setShowBinary] = useState(false);
-  const [expandedSubnet, setExpandedSubnet] = useState(null);
 
   // Define CopyButton component
   const CopyButton = ({ text, label }) => (
@@ -97,95 +95,111 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
             </p>
           </div>
 
-          <div className="subnets-table-wrapper">
-            <table className="vlsm-subnets-table">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Required Hosts</th>
-                  <th>Allocated Size</th>
-                  <th>Prefix</th>
-                  <th>Network</th>
-                  <th>First IP</th>
-                  <th>Last IP</th>
-                  <th>Broadcast</th>
-                  <th>Usable Hosts</th>
-                </tr>
-              </thead>
-              <tbody>
-                {result.subnets?.map((subnet, idx) => (
-                  <tr
-                    key={idx}
-                    className="vlsm-subnet-row"
-                    onClick={() =>
-                      setExpandedSubnet(expandedSubnet === idx ? null : idx)
-                    }
-                  >
-                    <td className="vlsm-index">{subnet.index + 1}</td>
-                    <td className="required-hosts">{subnet.requiredHosts}</td>
-                    <td className="allocated-size">{subnet.blockSize}</td>
-                    <td className="vlsm-prefix">/{subnet.prefix}</td>
-                    <td className="vlsm-network">
+          <div className="vlsm-subnets-cards">
+            {result.subnets?.map((subnet, idx) => (
+              <div className="vlsm-subnet-card" key={idx}>
+                <div className="subnet-card-header">
+                  <h4>Subnet {subnet.index + 1}</h4>
+                  <span className="subnet-prefix-badge">/{subnet.prefix}</span>
+                </div>
+                
+                <div className="subnet-card-grid">
+                  {/* Required & Allocated */}
+                  <div className="card-section">
+                    <div className="info-row">
+                      <div className="info-col">
+                        <label>Required Hosts</label>
+                        <span className="value">{subnet.requiredHosts}</span>
+                      </div>
+                      <div className="info-col">
+                        <label>Allocated Size</label>
+                        <span className="value">{subnet.blockSize}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Network & Broadcast */}
+                  <div className="card-section">
+                    <div className="info-full">
+                      <label>Network Address</label>
                       <div className="copy-cell">
-                        <span>{subnet.network}</span>
+                        <span className="value">{subnet.network}</span>
                         <button
                           className="small-copy-btn"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onCopy(subnet.network, `Subnet ${subnet.index + 1} Network`);
-                          }}
+                          onClick={() => onCopy(subnet.network, `Subnet ${subnet.index + 1} Network`)}
                         >
                           📋
                         </button>
                       </div>
-                    </td>
-                    <td className="vlsm-first-ip">
+                    </div>
+                    <div className="info-full">
+                      <label>Broadcast Address</label>
                       <div className="copy-cell">
-                        <span>{subnet.firstUsableIp}</span>
+                        <span className="value">{subnet.broadcast}</span>
                         <button
                           className="small-copy-btn"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onCopy(subnet.firstUsableIp, `Subnet ${subnet.index + 1} First IP`);
-                          }}
+                          onClick={() => onCopy(subnet.broadcast, `Subnet ${subnet.index + 1} Broadcast`)}
                         >
                           📋
                         </button>
                       </div>
-                    </td>
-                    <td className="vlsm-last-ip">
-                      <div className="copy-cell">
-                        <span>{subnet.lastUsableIp}</span>
-                        <button
-                          className="small-copy-btn"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onCopy(subnet.lastUsableIp, `Subnet ${subnet.index + 1} Last IP`);
-                          }}
-                        >
-                          📋
-                        </button>
+                    </div>
+                  </div>
+
+                  {/* First & Last IP */}
+                  <div className="card-section">
+                    <div className="info-row">
+                      <div className="info-col">
+                        <label>First IP</label>
+                        <div className="copy-cell">
+                          <span className="value">{subnet.firstUsableIp}</span>
+                          <button
+                            className="small-copy-btn"
+                            onClick={() => onCopy(subnet.firstUsableIp, `Subnet ${subnet.index + 1} First IP`)}
+                          >
+                            📋
+                          </button>
+                        </div>
                       </div>
-                    </td>
-                    <td className="vlsm-broadcast">
-                      <div className="copy-cell">
-                        <span>{subnet.broadcast}</span>
-                        <button
-                          className="small-copy-btn"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onCopy(subnet.broadcast, `Subnet ${subnet.index + 1} Broadcast`);
-                          }}
-                        >
-                          📋
-                        </button>
+                      <div className="info-col">
+                        <label>Last IP</label>
+                        <div className="copy-cell">
+                          <span className="value">{subnet.lastUsableIp}</span>
+                          <button
+                            className="small-copy-btn"
+                            onClick={() => onCopy(subnet.lastUsableIp, `Subnet ${subnet.index + 1} Last IP`)}
+                          >
+                            📋
+                          </button>
+                        </div>
                       </div>
-                    </td>
-                    <td className="vlsm-hosts">{subnet.usableHosts}</td>
-                  </tr>
-                )) || []}
-              </tbody>
-            </table>
+                    </div>
+                  </div>
+
+                  {/* Subnet Mask & Usable Hosts */}
+                  <div className="card-section">
+                    <div className="info-row">
+                      <div className="info-col">
+                        <label>Subnet Mask</label>
+                        <div className="copy-cell">
+                          <span className="value">{subnet.subnetMask}</span>
+                          <button
+                            className="small-copy-btn"
+                            onClick={() => onCopy(subnet.subnetMask, `Subnet ${subnet.index + 1} Subnet Mask`)}
+                          >
+                            📋
+                          </button>
+                        </div>
+                      </div>
+                      <div className="info-col">
+                        <label>Usable Hosts</label>
+                        <span className="value highlight">{subnet.usableHosts}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )) || []}
           </div>
 
           <div className="explanation-box vlsm-explanation">
@@ -361,133 +375,108 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
             )}
           </div>
 
-          {/* Subnets Table */}
+          {/* Subnets Cards */}
           <div className="subnets-section">
             <h4>Generated Subnets</h4>
-            <div className="subnets-table-wrapper">
-              <table className="subnets-table">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Network</th>
-                    <th>Broadcast</th>
-                    <th>First IP</th>
-                    <th>Last IP</th>
-                    <th>Hosts</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {result.subnets.map((subnet, idx) => (
-                    <React.Fragment key={idx}>
-                      <tr
-                        className="subnet-row"
-                        onClick={() =>
-                          setExpandedSubnet(
-                            expandedSubnet === idx ? null : idx
-                          )
-                        }
-                      >
-                        <td className="subnet-number">{subnet.index}</td>
-                        <td className="network-cell">
-                          <div className="copy-cell">
-                            <span>{subnet.network}</span>
-                            <button
-                              className="small-copy-btn"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                onCopy(
-                                  subnet.network,
-                                  `Subnet ${subnet.index} Network`
-                                );
-                              }}
-                            >
-                              📋
-                            </button>
-                          </div>
-                        </td>
-                        <td className="broadcast-cell">
-                          <div className="copy-cell">
-                            <span>{subnet.broadcast}</span>
-                            <button
-                              className="small-copy-btn"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                onCopy(
-                                  subnet.broadcast,
-                                  `Subnet ${subnet.index} Broadcast`
-                                );
-                              }}
-                            >
-                              📋
-                            </button>
-                          </div>
-                        </td>
-                        <td className="first-ip">
-                          <div className="copy-cell">
-                            <span>{subnet.firstIp}</span>
-                            <button
-                              className="small-copy-btn"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                onCopy(
-                                  subnet.firstIp,
-                                  `Subnet ${subnet.index} First IP`
-                                );
-                              }}
-                            >
-                              📋
-                            </button>
-                          </div>
-                        </td>
-                        <td className="last-ip">
-                          <div className="copy-cell">
-                            <span>{subnet.lastIp}</span>
-                            <button
-                              className="small-copy-btn"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                onCopy(
-                                  subnet.lastIp,
-                                  `Subnet ${subnet.index} Last IP`
-                                );
-                              }}
-                            >
-                              📋
-                            </button>
-                          </div>
-                        </td>
-                        <td className="hosts-count">{formatNumber(subnet.usableHosts)}</td>
-                        <td className="expand-btn">
-                          {expandedSubnet === idx ? '▼' : '▶'}
-                        </td>
-                      </tr>
+            <div className="subnets-cards">
+              {result.subnets.map((subnet, idx) => (
+                <div className="subnet-card" key={idx}>
+                  <div className="subnet-card-header">
+                    <h4>Subnet {subnet.index}</h4>
+                    <span className="subnet-prefix-badge">/{result.newPrefix}</span>
+                  </div>
+                  
+                  <div className="subnet-card-grid">
+                    {/* Network & Broadcast */}
+                    <div className="card-section">
+                      <div className="info-full">
+                        <label>Network Address</label>
+                        <div className="copy-cell">
+                          <span className="value">{subnet.network}</span>
+                          <button
+                            className="small-copy-btn"
+                            onClick={() => onCopy(subnet.network, `Subnet ${subnet.index} Network`)}
+                          >
+                            📋
+                          </button>
+                        </div>
+                      </div>
+                      <div className="info-full">
+                        <label>Broadcast Address</label>
+                        <div className="copy-cell">
+                          <span className="value">{subnet.broadcast}</span>
+                          <button
+                            className="small-copy-btn"
+                            onClick={() => onCopy(subnet.broadcast, `Subnet ${subnet.index} Broadcast`)}
+                          >
+                            📋
+                          </button>
+                        </div>
+                      </div>
+                    </div>
 
-                      {/* Expanded Row */}
-                      {expandedSubnet === idx && (
-                        <tr className="subnet-details-row">
-                          <td colSpan="7">
-                            <div className="subnet-details">
-                              <div className="detail-item">
-                                <label>Prefix:</label>
-                                <span>/{result.newPrefix}</span>
-                              </div>
-                              <div className="detail-item">
-                                <label>Mask:</label>
-                                <span>{subnet.mask}</span>
-                              </div>
-                              <div className="detail-item">
-                                <label>Total IPs:</label>
-                                <span>{formatNumber(subnet.totalIps)}</span>
-                              </div>
-                            </div>
-                          </td>
-                        </tr>
-                      )}
-                    </React.Fragment>
-                  ))}
-                </tbody>
-              </table>
+                    {/* First & Last IP */}
+                    <div className="card-section">
+                      <div className="info-row">
+                        <div className="info-col">
+                          <label>First IP</label>
+                          <div className="copy-cell">
+                            <span className="value">{subnet.firstIp}</span>
+                            <button
+                              className="small-copy-btn"
+                              onClick={() => onCopy(subnet.firstIp, `Subnet ${subnet.index} First IP`)}
+                            >
+                              📋
+                            </button>
+                          </div>
+                        </div>
+                        <div className="info-col">
+                          <label>Last IP</label>
+                          <div className="copy-cell">
+                            <span className="value">{subnet.lastIp}</span>
+                            <button
+                              className="small-copy-btn"
+                              onClick={() => onCopy(subnet.lastIp, `Subnet ${subnet.index} Last IP`)}
+                            >
+                              📋
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Mask & Hosts */}
+                    <div className="card-section">
+                      <div className="info-row">
+                        <div className="info-col">
+                          <label>Subnet Mask</label>
+                          <div className="copy-cell">
+                            <span className="value">{subnet.mask}</span>
+                            <button
+                              className="small-copy-btn"
+                              onClick={() => onCopy(subnet.mask, `Subnet ${subnet.index} Mask`)}
+                            >
+                              📋
+                            </button>
+                          </div>
+                        </div>
+                        <div className="info-col">
+                          <label>Usable Hosts</label>
+                          <span className="value highlight">{formatNumber(subnet.usableHosts)}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Total Info */}
+                    <div className="card-section">
+                      <div className="info-full">
+                        <label>Total IPs / Block Size</label>
+                        <span className="value">{formatNumber(subnet.totalIps)}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
