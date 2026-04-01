@@ -1,8 +1,22 @@
 import React, { useState } from 'react';
+import ExplanationModal from './ExplanationModal';
 import './ResultDisplay.css';
 
 const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
   const [showBinary, setShowBinary] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalData, setModalData] = useState(null);
+
+  // Open explanation modal
+  const openModal = (type, data) => {
+    setModalData({ type, ...data });
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setModalData(null);
+  };
 
   // Define CopyButton component
   const CopyButton = ({ text, label }) => (
@@ -421,7 +435,23 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
                         <div className="info-col">
                           <label>First IP</label>
                           <div className="copy-cell">
-                            <span className="value">{subnet.firstIp}</span>
+                            <button 
+                              className="value info-button"
+                              onClick={() => openModal('firstIp', {
+                                value: subnet.firstIp,
+                                network: subnet.network,
+                                lastIp: subnet.lastIp,
+                                broadcast: subnet.broadcast,
+                                subnetIndex: idx,
+                                prefix: result.newPrefix,
+                                blockSize: subnet.totalIps,
+                                usableHosts: subnet.usableHosts,
+                                maskBinary: subnet.maskBinary
+                              })}
+                              title="Click to see explanation"
+                            >
+                              {subnet.firstIp}
+                            </button>
                             <button
                               className="small-copy-btn"
                               onClick={() => onCopy(subnet.firstIp, `Subnet ${subnet.index} First IP`)}
@@ -433,7 +463,23 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
                         <div className="info-col">
                           <label>Last IP</label>
                           <div className="copy-cell">
-                            <span className="value">{subnet.lastIp}</span>
+                            <button 
+                              className="value info-button"
+                              onClick={() => openModal('lastIp', {
+                                value: subnet.lastIp,
+                                network: subnet.network,
+                                firstIp: subnet.firstIp,
+                                broadcast: subnet.broadcast,
+                                subnetIndex: idx,
+                                prefix: result.newPrefix,
+                                blockSize: subnet.totalIps,
+                                usableHosts: subnet.usableHosts,
+                                maskBinary: subnet.maskBinary
+                              })}
+                              title="Click to see explanation"
+                            >
+                              {subnet.lastIp}
+                            </button>
                             <button
                               className="small-copy-btn"
                               onClick={() => onCopy(subnet.lastIp, `Subnet ${subnet.index} Last IP`)}
@@ -451,7 +497,20 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
                         <div className="info-col">
                           <label>Subnet Mask</label>
                           <div className="copy-cell">
-                            <span className="value">{subnet.mask}</span>
+                            <button 
+                              className="value info-button"
+                              onClick={() => openModal('subnetMask', {
+                                value: subnet.mask,
+                                prefix: result.newPrefix,
+                                usableHosts: subnet.usableHosts,
+                                blockSize: subnet.totalIps,
+                                maskBinary: subnet.maskBinary,
+                                subnetIndex: idx
+                              })}
+                              title="Click to see explanation"
+                            >
+                              {subnet.mask}
+                            </button>
                             <button
                               className="small-copy-btn"
                               onClick={() => onCopy(subnet.mask, `Subnet ${subnet.index} Mask`)}
@@ -462,7 +521,22 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
                         </div>
                         <div className="info-col">
                           <label>Usable Hosts</label>
-                          <span className="value highlight">{formatNumber(subnet.usableHosts)}</span>
+                          <button 
+                            className="value highlight info-button"
+                            onClick={() => openModal('usableHosts', {
+                              value: subnet.usableHosts,
+                              blockSize: subnet.totalIps,
+                              prefix: result.newPrefix,
+                              subnetIndex: idx,
+                              firstIp: subnet.firstIp,
+                              lastIp: subnet.lastIp,
+                              network: subnet.network,
+                              broadcast: subnet.broadcast
+                            })}
+                            title="Click to see explanation"
+                          >
+                            {formatNumber(subnet.usableHosts)}
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -481,6 +555,14 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
           </div>
         </div>
       )}
+      
+      {/* Explanation Modal */}
+      <ExplanationModal 
+        isOpen={modalOpen} 
+        onClose={closeModal} 
+        type={modalData?.type} 
+        data={modalData}
+      />
     </div>
   );
 };

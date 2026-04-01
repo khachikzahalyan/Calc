@@ -124,6 +124,45 @@
   font-family: 'Monaco', 'Courier New', monospace;
 }
 
+/* Interactive Info Button */
+.info-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  text-align: left;
+}
+
+.info-button:hover {
+  color: var(--primary-color);
+}
+
+.info-button::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--primary-color);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.info-button:hover::after {
+  opacity: 1;
+}
+
+.info-button.highlight {
+  color: var(--primary-color);
+}
+
+.info-button.highlight:hover {
+  color: var(--primary-dark);
+}
+
 .binary {
   font-size: 0.75rem;
   font-family: 'Monaco', 'Courier New', monospace;
