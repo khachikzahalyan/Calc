@@ -2,20 +2,11 @@ import React, { useState } from 'react';
 import { ipToBinary } from '../utils/ip';
 import './ResultDisplay.css';
 
-const ResultDisplay = ({ result, onCopy, mode }) => {
+const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
   const [showBinary, setShowBinary] = useState(false);
   const [expandedSubnet, setExpandedSubnet] = useState(null);
 
-  if (result.error) {
-    return (
-      <div className="result-error">
-        <div className="error-icon">⚠️</div>
-        <h3>Calculation Error</h3>
-        <p>{result.error}</p>
-      </div>
-    );
-  }
-
+  // Define CopyButton component
   const CopyButton = ({ text, label }) => (
     <button
       className="copy-btn"
@@ -27,15 +18,218 @@ const ResultDisplay = ({ result, onCopy, mode }) => {
     </button>
   );
 
+  // Check for errors first
+  if (!result || result.error) {
+    return (
+      <div className="result-error">
+        <div className="error-icon">⚠️</div>
+        <h3>Calculation Error</h3>
+        <p>{result?.error || 'Unknown error'}</p>
+      </div>
+    );
+  }
+
+  // Helper function to safely call toLocaleString
+  const formatNumber = (num) => {
+    return typeof num === 'number' ? num.toLocaleString() : '0';
+  };
+
+  // ========== VLSM MODE ==========
+  if (calculatorMode === 'vlsm') {
+    return (
+      <div className="result-display vlsm-display">
+        {/* Base Network Info */}
+        <div className="result-section">
+          <div className="section-header">
+            <h3>VLSM Allocation Details</h3>
+          </div>
+
+          <div className="info-grid">
+            <div className="info-item">
+              <label>Base Network</label>
+              <div className="value-row">
+                <span className="value">
+                  {result.baseNetwork}/{result.basePrefix}
+                </span>
+                <CopyButton
+                  text={`${result.baseNetwork}/${result.basePrefix}`}
+                  label="Base Network"
+                />
+              </div>
+            </div>
+
+            <div className="info-item">
+              <label>Base Subnet Mask</label>
+              <div className="value-row">
+                <span className="value">{result.baseMask}</span>
+                <CopyButton text={result.baseMask} label="Base Subnet Mask" />
+              </div>
+            </div>
+
+            <div className="info-item">
+              <label>Total IPs in Base Network</label>
+              <span className="value">{formatNumber(result.baseTotalIps)}</span>
+            </div>
+
+            <div className="info-item">
+              <label>Total Allocated IPs</label>
+              <span className="value">{formatNumber(result.totalAllocatedIps)}</span>
+            </div>
+
+            <div className="info-item">
+              <label>Remaining IPs</label>
+              <span className="value">{formatNumber(result.remainingIps)}</span>
+            </div>
+
+            <div className="info-item">
+              <label>Allocation Efficiency</label>
+              <span className="value highlight">{result.allocationEfficiency}%</span>
+            </div>
+          </div>
+        </div>
+
+        {/* VLSM Subnets Table */}
+        <div className="result-section vlsm-section">
+          <h3>VLSM Subnets</h3>
+          <div className="vlsm-info">
+            <p>
+              <strong>Host Requirements (sorted):</strong> {result.originalOrder?.join(', ') || 'N/A'}
+            </p>
+          </div>
+
+          <div className="subnets-table-wrapper">
+            <table className="vlsm-subnets-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Required Hosts</th>
+                  <th>Allocated Size</th>
+                  <th>Prefix</th>
+                  <th>Network</th>
+                  <th>First IP</th>
+                  <th>Last IP</th>
+                  <th>Broadcast</th>
+                  <th>Usable Hosts</th>
+                </tr>
+              </thead>
+              <tbody>
+                {result.subnets?.map((subnet, idx) => (
+                  <tr
+                    key={idx}
+                    className="vlsm-subnet-row"
+                    onClick={() =>
+                      setExpandedSubnet(expandedSubnet === idx ? null : idx)
+                    }
+                  >
+                    <td className="vlsm-index">{subnet.index + 1}</td>
+                    <td className="required-hosts">{subnet.requiredHosts}</td>
+                    <td className="allocated-size">{subnet.blockSize}</td>
+                    <td className="vlsm-prefix">/{subnet.prefix}</td>
+                    <td className="vlsm-network">
+                      <div className="copy-cell">
+                        <span>{subnet.network}</span>
+                        <button
+                          className="small-copy-btn"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onCopy(subnet.network, `Subnet ${subnet.index + 1} Network`);
+                          }}
+                        >
+                          📋
+                        </button>
+                      </div>
+                    </td>
+                    <td className="vlsm-first-ip">
+                      <div className="copy-cell">
+                        <span>{subnet.firstUsableIp}</span>
+                        <button
+                          className="small-copy-btn"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onCopy(subnet.firstUsableIp, `Subnet ${subnet.index + 1} First IP`);
+                          }}
+                        >
+                          📋
+                        </button>
+                      </div>
+                    </td>
+                    <td className="vlsm-last-ip">
+                      <div className="copy-cell">
+                        <span>{subnet.lastUsableIp}</span>
+                        <button
+                          className="small-copy-btn"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onCopy(subnet.lastUsableIp, `Subnet ${subnet.index + 1} Last IP`);
+                          }}
+                        >
+                          📋
+                        </button>
+                      </div>
+                    </td>
+                    <td className="vlsm-broadcast">
+                      <div className="copy-cell">
+                        <span>{subnet.broadcast}</span>
+                        <button
+                          className="small-copy-btn"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onCopy(subnet.broadcast, `Subnet ${subnet.index + 1} Broadcast`);
+                          }}
+                        >
+                          📋
+                        </button>
+                      </div>
+                    </td>
+                    <td className="vlsm-hosts">{subnet.usableHosts}</td>
+                  </tr>
+                )) || []}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="explanation-box vlsm-explanation">
+            <strong>VLSM Algorithm:</strong>
+            <ol>
+              <li>Sort host requirements in descending order</li>
+              <li>For each requirement, calculate smallest matching subnet size (power of 2)</li>
+              <li>Allocate subnets sequentially from base network</li>
+              <li>Largest subnet is assigned first to minimize unused addresses</li>
+            </ol>
+          </div>
+        </div>
+
+        {/* Summary */}
+        <div className="result-section vlsm-summary">
+          <h3>Summary</h3>
+          <div className="summary-grid">
+            <div className="summary-item">
+              <span className="label">Subnets Created:</span>
+              <span className="value">{result.subnets?.length || 0}</span>
+            </div>
+            <div className="summary-item">
+              <span className="label">IPs Used:</span>
+              <span className="value">
+                {formatNumber(result.totalAllocatedIps)} / {formatNumber(result.baseTotalIps)}
+              </span>
+            </div>
+            <div className="summary-item">
+              <span className="label">Efficiency:</span>
+              <span className="value highlight">{result.allocationEfficiency}%</span>
+            </div>
+            <div className="summary-item">
+              <span className="label">Unused IPs:</span>
+              <span className="value">{formatNumber(result.remainingIps)}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ========== STANDARD SUBNETTING MODE ==========
   return (
     <div className="result-display">
-      {/* Error Alert */}
-      {result.error && (
-        <div className="alert alert-error">
-          <strong>Error:</strong> {result.error}
-        </div>
-      )}
-
       {/* Basic Network Information */}
       <div className="result-section">
         <div className="section-header">
@@ -108,12 +302,12 @@ const ResultDisplay = ({ result, onCopy, mode }) => {
 
           <div className="info-item">
             <label>Total IPs</label>
-            <span className="value">{result.totalIps.toLocaleString()}</span>
+            <span className="value">{formatNumber(result.totalIps)}</span>
           </div>
 
           <div className="info-item">
             <label>Usable Hosts</label>
-            <span className="value">{result.usableHosts.toLocaleString()}</span>
+            <span className="value">{formatNumber(result.usableHosts)}</span>
           </div>
 
           <div className="info-item">
@@ -149,7 +343,9 @@ const ResultDisplay = ({ result, onCopy, mode }) => {
             </div>
             <div className="subnet-info-item">
               <label>Hosts per Subnet</label>
-              <span className="value">{calculateHostsPerSubnet(result)}</span>
+              <span className="value">
+                {formatNumber(Math.pow(2, 32 - result.newPrefix) - 2)}
+              </span>
             </div>
           </div>
 
@@ -261,7 +457,7 @@ const ResultDisplay = ({ result, onCopy, mode }) => {
                             </button>
                           </div>
                         </td>
-                        <td className="hosts-count">{subnet.usableHosts}</td>
+                        <td className="hosts-count">{formatNumber(subnet.usableHosts)}</td>
                         <td className="expand-btn">
                           {expandedSubnet === idx ? '▼' : '▶'}
                         </td>
@@ -274,19 +470,15 @@ const ResultDisplay = ({ result, onCopy, mode }) => {
                             <div className="subnet-details">
                               <div className="detail-item">
                                 <label>Prefix:</label>
-                                <span>/{subnet.prefix}</span>
+                                <span>/{result.newPrefix}</span>
+                              </div>
+                              <div className="detail-item">
+                                <label>Mask:</label>
+                                <span>{subnet.mask}</span>
                               </div>
                               <div className="detail-item">
                                 <label>Total IPs:</label>
-                                <span>{subnet.totalIps}</span>
-                              </div>
-                              <div className="detail-item">
-                                <label>Usable Hosts:</label>
-                                <span>{subnet.usableHosts}</span>
-                              </div>
-                              <div className="detail-item">
-                                <label>Subnet Mask:</label>
-                                <span>255.255.255.0</span>
+                                <span>{formatNumber(subnet.totalIps)}</span>
                               </div>
                             </div>
                           </td>
@@ -300,37 +492,8 @@ const ResultDisplay = ({ result, onCopy, mode }) => {
           </div>
         </div>
       )}
-
-      {/* Quick Reference */}
-      <div className="result-section quick-reference">
-        <h3>Quick Reference</h3>
-        <div className="reference-grid">
-          <div className="reference-item">
-            <strong>Network Size</strong>
-            <p>/{result.prefix}</p>
-          </div>
-          <div className="reference-item">
-            <strong>Subnet Mask</strong>
-            <p>{result.mask}</p>
-          </div>
-          <div className="reference-item">
-            <strong>Usable Range</strong>
-            <p>
-              {result.firstUsableIp} - {result.lastUsableIp}
-            </p>
-          </div>
-        </div>
-      </div>
     </div>
   );
-};
-
-// Helper to calculate hosts per subnet based on result
-const calculateHostsPerSubnet = (result) => {
-  if (result.subnets && result.subnets.length > 0) {
-    return result.subnets[0].usableHosts;
-  }
-  return result.usableHosts;
 };
 
 export default ResultDisplay;

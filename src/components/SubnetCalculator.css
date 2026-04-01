@@ -126,7 +126,16 @@
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 8px;
-  display: block;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.subtitle {
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  text-transform: none;
 }
 
 .form-input {
@@ -137,6 +146,12 @@
   background: var(--bg-primary);
   color: var(--text-primary);
   transition: all 0.3s ease;
+}
+
+.textarea-input {
+  resize: vertical;
+  font-family: 'Monaco', 'Courier New', monospace;
+  min-height: 100px;
 }
 
 .form-input:focus {
@@ -219,6 +234,21 @@
 
 .calculate-btn:active {
   transform: translateY(0);
+}
+
+.info-box {
+  padding: 16px;
+  background: rgba(37, 99, 235, 0.05);
+  border-left: 4px solid var(--primary-color);
+  border-radius: 6px;
+  margin-bottom: 20px;
+  color: var(--text-primary);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+.info-box p {
+  margin: 0;
 }
 
 /* Results Panel */
