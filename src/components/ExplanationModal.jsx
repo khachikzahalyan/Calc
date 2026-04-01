@@ -89,13 +89,24 @@ const ExplanationModal = ({ isOpen, onClose, type, data }) => {
         const prefix = data.prefix;
         const hostBits = 32 - prefix;
         const networkBits = prefix;
+        
+        // Generate binary representation safely
+        const generateBinary = () => {
+          let binary = '';
+          for (let i = 0; i < 32; i++) {
+            if (i > 0 && i % 8 === 0) binary += '.';
+            binary += i < networkBits ? '1' : '0';
+          }
+          return binary;
+        };
+        
         return {
           title: 'Subnet Mask Calculation',
           value: data.value,
           explanation: `The subnet mask is a 32-bit number that divides the IP address into network and host portions. Each bit is either 1 (network) or 0 (host).`,
           formula: [
             `Prefix: /${prefix} means ${networkBits} network bits (ones) and ${hostBits} host bits (zeros)`,
-            `Binary: ${networkBits > 0 ? '1'.repeat(Math.min(networkBits, 8)) : ''}${'0'.repeat(Math.min(8 - networkBits, 8))}.${Math.max(0, networkBits - 8) > 0 ? '1'.repeat(Math.max(0, networkBits - 8)) : ''}${'0'.repeat(Math.max(0, 8 - (networkBits - 8)))}.${Math.max(0, networkBits - 16) > 0 ? '1'.repeat(Math.max(0, networkBits - 16)) : ''}${'0'.repeat(Math.max(0, 8 - (networkBits - 16)))}.${Math.max(0, networkBits - 24) > 0 ? '1'.repeat(Math.max(0, networkBits - 24)) : ''}${'0'.repeat(Math.max(0, 8 - (networkBits - 24)))}`,
+            `Binary: ${generateBinary()}`,
             `Decimal representation: ${data.value}`,
             `This mask allows for ${data.usableHosts} usable host addresses in the network`,
           ],
