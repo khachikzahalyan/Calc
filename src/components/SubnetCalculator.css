@@ -78,6 +78,39 @@
   transform: scale(1.05);
 }
 
+/* Header Controls - Language Selector */
+.header-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.lang-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 50px;
+  text-align: center;
+}
+
+.lang-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.lang-btn.active {
+  background: rgba(255, 255, 255, 0.9);
+  color: #667eea;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
 /* Main Container */
 .calculator-container {
   display: grid;

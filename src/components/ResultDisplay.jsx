@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useI18n } from '../contexts/I18nContext';
 import ExplanationModal from './ExplanationModal';
 import './ResultDisplay.css';
 
 const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
+  const { t } = useI18n();
   const [showBinary, setShowBinary] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalData, setModalData] = useState(null);
@@ -23,7 +25,7 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
     <button
       className="copy-btn"
       onClick={() => explainType ? openModal(explainType, explainData) : onCopy(text, label)}
-      title={explainType ? "Click to see explanation" : "Copy to clipboard"}
+      title={explainType ? t('ui.explainClick') : t('ui.copyClipboard')}
       aria-label={explainType ? `Explain ${label}` : `Copy ${label}`}
     >
       {explainType ? '💡' : '📋'}
@@ -32,11 +34,12 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
 
   // Check for errors first
   if (!result || result.error) {
+    const errorKey = result?.error || 'result.unknownError';
     return (
       <div className="result-error">
         <div className="error-icon">⚠️</div>
-        <h3>Calculation Error</h3>
-        <p>{result?.error || 'Unknown error'}</p>
+        <h3>{t('result.error')}</h3>
+        <p>{t(errorKey)}</p>
       </div>
     );
   }
@@ -53,48 +56,48 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
         {/* Base Network Info */}
         <div className="result-section">
           <div className="section-header">
-            <h3>VLSM Allocation Details</h3>
+            <h3>{t('result.vlsmAllocationDetails')}</h3>
           </div>
 
           <div className="info-grid">
             <div className="info-item">
-              <label>Base Network</label>
+              <label>{t('result.baseNetwork')}</label>
               <div className="value-row">
                 <span className="value">
                   {result.baseNetwork}/{result.basePrefix}
                 </span>
                 <CopyButton
                   text={`${result.baseNetwork}/${result.basePrefix}`}
-                  label="Base Network"
+                  label={t('result.baseNetwork')}
                 />
               </div>
             </div>
 
             <div className="info-item">
-              <label>Base Subnet Mask</label>
+              <label>{t('result.baseSubnetMask')}</label>
               <div className="value-row">
                 <span className="value">{result.baseMask}</span>
-                <CopyButton text={result.baseMask} label="Base Subnet Mask" />
+                <CopyButton text={result.baseMask} label={t('result.baseSubnetMask')} />
               </div>
             </div>
 
             <div className="info-item">
-              <label>Total IPs in Base Network</label>
+              <label>{t('result.totalIpsInBaseNetwork')}</label>
               <span className="value">{formatNumber(result.baseTotalIps)}</span>
             </div>
 
             <div className="info-item">
-              <label>Total Allocated IPs</label>
+              <label>{t('result.totalAllocatedIps')}</label>
               <span className="value">{formatNumber(result.totalAllocatedIps)}</span>
             </div>
 
             <div className="info-item">
-              <label>Remaining IPs</label>
+              <label>{t('result.remainingIps')}</label>
               <span className="value">{formatNumber(result.remainingIps)}</span>
             </div>
 
             <div className="info-item">
-              <label>Allocation Efficiency</label>
+              <label>{t('result.allocationEfficiency')}</label>
               <span className="value highlight">{result.allocationEfficiency}%</span>
             </div>
           </div>
@@ -102,10 +105,10 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
 
         {/* VLSM Subnets Table */}
         <div className="result-section vlsm-section">
-          <h3>VLSM Subnets</h3>
+          <h3>{t('result.vlsmSubnets')}</h3>
           <div className="vlsm-info">
             <p>
-              <strong>Host Requirements (sorted):</strong> {result.originalOrder?.join(', ') || 'N/A'}
+              <strong>{t('result.hostRequirementsSorted')}</strong> {result.originalOrder?.join(', ') || t('result.notAvailable')}
             </p>
           </div>
 
@@ -113,7 +116,7 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
             {result.subnets?.map((subnet, idx) => (
               <div className="vlsm-subnet-card" key={idx}>
                 <div className="subnet-card-header">
-                  <h4>Subnet {subnet.index + 1}</h4>
+                  <h4>{t('result.subnet')} {subnet.index + 1}</h4>
                   <span className="subnet-prefix-badge">/{subnet.prefix}</span>
                 </div>
                 
@@ -122,11 +125,11 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
                   <div className="card-section">
                     <div className="info-row">
                       <div className="info-col">
-                        <label>Required Hosts</label>
+                        <label>{t('result.requiredHosts')}</label>
                         <span className="value">{subnet.requiredHosts}</span>
                       </div>
                       <div className="info-col">
-                        <label>Allocated Size</label>
+                        <label>{t('result.allocatedSize')}</label>
                         <span className="value">{subnet.blockSize}</span>
                       </div>
                     </div>
@@ -135,24 +138,24 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
                   {/* Network & Broadcast */}
                   <div className="card-section">
                     <div className="info-full">
-                      <label>Network Address</label>
+                      <label>{t('result.networkAddress')}</label>
                       <div className="copy-cell">
                         <span className="value">{subnet.network}</span>
                         <button
                           className="small-copy-btn"
-                          onClick={() => onCopy(subnet.network, `Subnet ${subnet.index + 1} Network`)}
+                          onClick={() => onCopy(subnet.network, `${t('result.subnet')} ${subnet.index + 1} ${t('result.networkAddress')}`)}
                         >
                           📋
                         </button>
                       </div>
                     </div>
                     <div className="info-full">
-                      <label>Broadcast Address</label>
+                      <label>{t('result.broadcastAddress')}</label>
                       <div className="copy-cell">
                         <span className="value">{subnet.broadcast}</span>
                         <button
                           className="small-copy-btn"
-                          onClick={() => onCopy(subnet.broadcast, `Subnet ${subnet.index + 1} Broadcast`)}
+                          onClick={() => onCopy(subnet.broadcast, `${t('result.subnet')} ${subnet.index + 1} ${t('result.broadcastAddress')}`)}
                         >
                           📋
                         </button>
@@ -164,24 +167,24 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
                   <div className="card-section">
                     <div className="info-row">
                       <div className="info-col">
-                        <label>First IP</label>
+                        <label>{t('result.firstIp')}</label>
                         <div className="copy-cell">
                           <span className="value">{subnet.firstUsableIp}</span>
                           <button
                             className="small-copy-btn"
-                            onClick={() => onCopy(subnet.firstUsableIp, `Subnet ${subnet.index + 1} First IP`)}
+                            onClick={() => onCopy(subnet.firstUsableIp, `${t('result.subnet')} ${subnet.index + 1} ${t('result.firstIp')}`)}
                           >
                             📋
                           </button>
                         </div>
                       </div>
                       <div className="info-col">
-                        <label>Last IP</label>
+                        <label>{t('result.lastIp')}</label>
                         <div className="copy-cell">
                           <span className="value">{subnet.lastUsableIp}</span>
                           <button
                             className="small-copy-btn"
-                            onClick={() => onCopy(subnet.lastUsableIp, `Subnet ${subnet.index + 1} Last IP`)}
+                            onClick={() => onCopy(subnet.lastUsableIp, `${t('result.subnet')} ${subnet.index + 1} ${t('result.lastIp')}`)}
                           >
                             📋
                           </button>
@@ -194,19 +197,19 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
                   <div className="card-section">
                     <div className="info-row">
                       <div className="info-col">
-                        <label>Subnet Mask</label>
+                        <label>{t('result.subnetMaskLabel')}</label>
                         <div className="copy-cell">
                           <span className="value">{subnet.subnetMask}</span>
                           <button
                             className="small-copy-btn"
-                            onClick={() => onCopy(subnet.subnetMask, `Subnet ${subnet.index + 1} Subnet Mask`)}
+                            onClick={() => onCopy(subnet.subnetMask, `${t('result.subnet')} ${subnet.index + 1} ${t('result.subnetMaskLabel')}`)}
                           >
                             📋
                           </button>
                         </div>
                       </div>
                       <div className="info-col">
-                        <label>Usable Hosts</label>
+                        <label>{t('result.usableHostsLabel')}</label>
                         <span className="value highlight">{subnet.usableHosts}</span>
                       </div>
                     </div>
@@ -217,36 +220,36 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
           </div>
 
           <div className="explanation-box vlsm-explanation">
-            <strong>VLSM Algorithm:</strong>
+            <strong>{t('result.vlsmAlgorithmLabel')}</strong>
             <ol>
-              <li>Sort host requirements in descending order</li>
-              <li>For each requirement, calculate smallest matching subnet size (power of 2)</li>
-              <li>Allocate subnets sequentially from base network</li>
-              <li>Largest subnet is assigned first to minimize unused addresses</li>
+              <li>{t('result.vlsmStep1')}</li>
+              <li>{t('result.vlsmStep2')}</li>
+              <li>{t('result.vlsmStep3')}</li>
+              <li>{t('result.vlsmStep4')}</li>
             </ol>
           </div>
         </div>
 
         {/* Summary */}
         <div className="result-section vlsm-summary">
-          <h3>Summary</h3>
+          <h3>{t('result.summaryLabel')}</h3>
           <div className="summary-grid">
             <div className="summary-item">
-              <span className="label">Subnets Created:</span>
+              <span className="label">{t('result.subnetsCreatedLabel')}</span>
               <span className="value">{result.subnets?.length || 0}</span>
             </div>
             <div className="summary-item">
-              <span className="label">IPs Used:</span>
+              <span className="label">{t('result.ipsUsedLabel')}</span>
               <span className="value">
                 {formatNumber(result.totalAllocatedIps)} / {formatNumber(result.baseTotalIps)}
               </span>
             </div>
             <div className="summary-item">
-              <span className="label">Efficiency:</span>
+              <span className="label">{t('result.efficiencyLabel')}</span>
               <span className="value highlight">{result.allocationEfficiency}%</span>
             </div>
             <div className="summary-item">
-              <span className="label">Unused IPs:</span>
+              <span className="label">{t('result.unusedIpsLabel')}</span>
               <span className="value">{formatNumber(result.remainingIps)}</span>
             </div>
           </div>
@@ -261,39 +264,39 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
       {/* Basic Network Information */}
       <div className="result-section">
         <div className="section-header">
-          <h3>Network Information</h3>
+          <h3>{t('result.networkInfo')}</h3>
           <button
             className="binary-toggle"
             onClick={() => setShowBinary(!showBinary)}
           >
-            {showBinary ? 'Hide Binary' : 'Show Binary'}
+            {showBinary ? t('binary.hide') : t('binary.show')}
           </button>
         </div>
 
         <div className="info-grid">
           <div className="info-item">
-            <label>IP Address</label>
+            <label>{t('result.ipAddress')}</label>
             <div className="value-row">
               <span className="value">{result.ip}</span>
-              <CopyButton text={result.ip} label="IP Address" />
+              <CopyButton text={result.ip} label={t('result.ipAddress')} />
             </div>
             {showBinary && <div className="binary">{result.ipBinary}</div>}
           </div>
 
           <div className="info-item">
-            <label>Prefix</label>
+            <label>{t('result.prefix')}</label>
             <div className="value-row">
               <span className="value">/{result.prefix}</span>
             </div>
           </div>
 
           <div className="info-item">
-            <label>Subnet Mask</label>
+            <label>{t('result.subnetMask')}</label>
             <div className="value-row">
               <span className="value">{result.mask}</span>
               <CopyButton 
                 text={result.mask} 
-                label="Subnet Mask"
+                label={t('result.subnetMask')}
                 explainType="networkMask"
                 explainData={{
                   value: result.mask,
@@ -307,12 +310,12 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
           </div>
 
           <div className="info-item">
-            <label>Network Address</label>
+            <label>{t('result.networkAddress')}</label>
             <div className="value-row">
               <span className="value">{result.network}</span>
               <CopyButton 
                 text={result.network} 
-                label="Network Address"
+                label={t('result.networkAddress')}
                 explainType="networkAddress"
                 explainData={{
                   value: result.network,
@@ -327,12 +330,12 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
           </div>
 
           <div className="info-item">
-            <label>Broadcast Address</label>
+            <label>{t('result.broadcastAddress')}</label>
             <div className="value-row">
               <span className="value">{result.broadcast}</span>
               <CopyButton 
                 text={result.broadcast} 
-                label="Broadcast Address"
+                label={t('result.broadcastAddress')}
                 explainType="broadcastAddress"
                 explainData={{
                   value: result.broadcast,
@@ -347,33 +350,33 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
           </div>
 
           <div className="info-item">
-            <label>First Usable IP</label>
+            <label>{t('result.firstUsableIp')}</label>
             <div className="value-row">
               <span className="value">{result.firstUsableIp}</span>
-              <CopyButton text={result.firstUsableIp} label="First Usable IP" />
+              <CopyButton text={result.firstUsableIp} label={t('result.firstUsableIp')} />
             </div>
           </div>
 
           <div className="info-item">
-            <label>Last Usable IP</label>
+            <label>{t('result.lastUsableIp')}</label>
             <div className="value-row">
               <span className="value">{result.lastUsableIp}</span>
-              <CopyButton text={result.lastUsableIp} label="Last Usable IP" />
+              <CopyButton text={result.lastUsableIp} label={t('result.lastUsableIp')} />
             </div>
           </div>
 
           <div className="info-item">
-            <label>Total IPs</label>
+            <label>{t('result.totalIps')}</label>
             <span className="value">{formatNumber(result.totalIps)}</span>
           </div>
 
           <div className="info-item">
-            <label>Usable Hosts</label>
+            <label>{t('result.usableHosts')}</label>
             <span className="value">{formatNumber(result.usableHosts)}</span>
           </div>
 
           <div className="info-item">
-            <label>Host Bits</label>
+            <label>{t('result.hostBits')}</label>
             <span className="value">{result.hostBits}</span>
           </div>
         </div>
@@ -383,28 +386,28 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
       {result.subnets && result.subnets.length > 0 && (
         <div className="result-section subnetting-section">
           <div className="section-header">
-            <h3>Subnetting Details</h3>
+            <h3>{t('result.subnettingDetails')}</h3>
           </div>
 
           <div className="subnet-info-grid">
             <div className="subnet-info-item">
-              <label>Original Prefix</label>
+              <label>{t('result.originalPrefix')}</label>
               <span className="value">/{result.prefix}</span>
             </div>
             <div className="subnet-info-item">
-              <label>New Prefix</label>
+              <label>{t('result.newPrefix')}</label>
               <span className="value highlight">/{result.newPrefix}</span>
             </div>
             <div className="subnet-info-item">
-              <label>Subnet Bits Used</label>
+              <label>{t('result.subnetBitsUsed')}</label>
               <span className="value">{result.subnetBitsUsed}</span>
             </div>
             <div className="subnet-info-item">
-              <label>Number of Subnets</label>
+              <label>{t('result.numberOfSubnets')}</label>
               <span className="value">{result.subnetCount}</span>
             </div>
             <div className="subnet-info-item">
-              <label>Hosts per Subnet</label>
+              <label>{t('result.hostsPerSubnet')}</label>
               <span className="value">
                 {formatNumber(Math.pow(2, 32 - result.newPrefix) - 2)}
               </span>
@@ -412,25 +415,25 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
           </div>
 
           <div className="explanation-box">
-            <strong>Calculation:</strong>
+            <strong>{t('result.calculation')}</strong>
             {result.subnetBitsUsed > 0 && (
               <p>
-                To create {result.subnetCount} subnet{result.subnetCount > 1 ? 's' : ''},
-                we need {result.subnetBitsUsed} bit{result.subnetBitsUsed > 1 ? 's' : ''} (2
-                <sup>{result.subnetBitsUsed}</sup> = {result.subnetCount}). Original prefix /{result.prefix}
-                + {result.subnetBitsUsed} bits = /<strong>{result.newPrefix}</strong>
+                {t('result.toCreate')} {result.subnetCount} {result.subnetCount > 1 ? t('result.subnets') : t('result.subnet')},
+                {t('result.weneed')} {result.subnetBitsUsed} {result.subnetBitsUsed > 1 ? t('result.bits') : t('result.bits')} (2
+                <sup>{result.subnetBitsUsed}</sup> = {result.subnetCount}). {t('result.originalPrefixText')} /{result.prefix}
+                + {result.subnetBitsUsed} {t('result.bits')} = /<strong>{result.newPrefix}</strong>
               </p>
             )}
           </div>
 
           {/* Subnets Cards */}
           <div className="subnets-section">
-            <h4>Generated Subnets</h4>
+            <h4>{t('result.generatedSubnets')}</h4>
             <div className="subnets-cards">
               {result.subnets.map((subnet, idx) => (
                 <div className="subnet-card" key={idx}>
                   <div className="subnet-card-header">
-                    <h4>Subnet {subnet.index}</h4>
+                    <h4>{t('result.subnet')} {subnet.index}</h4>
                     <span className="subnet-prefix-badge">/{result.newPrefix}</span>
                   </div>
                   
@@ -438,24 +441,24 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
                     {/* Network & Broadcast */}
                     <div className="card-section">
                       <div className="info-full">
-                        <label>Network Address</label>
+                        <label>{t('result.networkAddress')}</label>
                         <div className="copy-cell">
                           <span className="value">{subnet.network}</span>
                           <button
                             className="small-copy-btn"
-                            onClick={() => onCopy(subnet.network, `Subnet ${subnet.index} Network`)}
+                            onClick={() => onCopy(subnet.network, `${t('result.subnet')} ${subnet.index} ${t('result.networkAddress')}`)}
                           >
                             📋
                           </button>
                         </div>
                       </div>
                       <div className="info-full">
-                        <label>Broadcast Address</label>
+                        <label>{t('result.broadcastAddress')}</label>
                         <div className="copy-cell">
                           <span className="value">{subnet.broadcast}</span>
                           <button
                             className="small-copy-btn"
-                            onClick={() => onCopy(subnet.broadcast, `Subnet ${subnet.index} Broadcast`)}
+                            onClick={() => onCopy(subnet.broadcast, `${t('result.subnet')} ${subnet.index} ${t('result.broadcastAddress')}`)}
                           >
                             📋
                           </button>
@@ -467,7 +470,7 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
                     <div className="card-section">
                       <div className="info-row">
                         <div className="info-col">
-                          <label>First IP</label>
+                          <label>{t('result.firstIp')}</label>
                           <div className="copy-cell">
                             <button 
                               className="value info-button"
@@ -482,20 +485,20 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
                                 usableHosts: subnet.usableHosts,
                                 maskBinary: subnet.maskBinary
                               })}
-                              title="Click to see explanation"
+                              title={t('ui.explainClick')}
                             >
                               {subnet.firstIp}
                             </button>
                             <button
                               className="small-copy-btn"
-                              onClick={() => onCopy(subnet.firstIp, `Subnet ${subnet.index} First IP`)}
+                              onClick={() => onCopy(subnet.firstIp, `${t('result.subnet')} ${subnet.index} ${t('result.firstIp')}`)}
                             >
                               📋
                             </button>
                           </div>
                         </div>
                         <div className="info-col">
-                          <label>Last IP</label>
+                          <label>{t('result.lastIp')}</label>
                           <div className="copy-cell">
                             <button 
                               className="value info-button"
@@ -510,7 +513,7 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
                                 usableHosts: subnet.usableHosts,
                                 maskBinary: subnet.maskBinary
                               })}
-                              title="Click to see explanation"
+                              title={t('ui.explainClick')}
                             >
                               {subnet.lastIp}
                             </button>
@@ -529,7 +532,7 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
                     <div className="card-section">
                       <div className="info-row">
                         <div className="info-col">
-                          <label>Subnet Mask</label>
+                          <label>{t('result.subnetMaskLabel')}</label>
                           <div className="copy-cell">
                             <button 
                               className="value info-button"
@@ -541,7 +544,7 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
                                 maskBinary: subnet.maskBinary,
                                 subnetIndex: idx
                               })}
-                              title="Click to see explanation"
+                              title={t('ui.explainClick')}
                             >
                               {subnet.mask}
                             </button>
@@ -554,7 +557,7 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
                           </div>
                         </div>
                         <div className="info-col">
-                          <label>Usable Hosts</label>
+                          <label>{t('result.usableHostsLabel')}</label>
                           <button 
                             className="value highlight info-button"
                             onClick={() => openModal('usableHosts', {
@@ -567,7 +570,7 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
                               network: subnet.network,
                               broadcast: subnet.broadcast
                             })}
-                            title="Click to see explanation"
+                            title={t('ui.explainClick')}
                           >
                             {formatNumber(subnet.usableHosts)}
                           </button>
@@ -578,7 +581,7 @@ const ResultDisplay = ({ result, onCopy, calculatorMode }) => {
                     {/* Total Info */}
                     <div className="card-section">
                       <div className="info-full">
-                        <label>Total IPs / Block Size</label>
+                        <label>{t('result.totalIpsBlockSize')}</label>
                         <span className="value">{formatNumber(subnet.totalIps)}</span>
                       </div>
                     </div>

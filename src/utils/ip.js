@@ -189,6 +189,8 @@ export const generateSubnets = (baseNetwork, basePrefix, newPrefix) => {
   const subnetBits = newPrefix - basePrefix;
   const increment = Math.pow(2, 32 - newPrefix);
   const subnetCount = Math.pow(2, subnetBits);
+  const mask = prefixToMask(newPrefix);
+  const maskBinary = ipToBinary(mask);
 
   const subnets = [];
   for (let i = 0; i < subnetCount; i++) {
@@ -204,6 +206,8 @@ export const generateSubnets = (baseNetwork, basePrefix, newPrefix) => {
       firstIp: intToIp((network + 1) >>> 0),
       lastIp: intToIp((broadcast - 1) >>> 0),
       prefix: newPrefix,
+      mask: intToIp(mask),
+      maskBinary: maskBinary,
       totalIps: calculateTotalIps(32 - newPrefix),
       usableHosts: calculateHosts(32 - newPrefix),
     });
@@ -223,12 +227,12 @@ export const generateSubnets = (baseNetwork, basePrefix, newPrefix) => {
 export const calculateSubnet = (ip, prefix, numSubnets = null, hostsPerSubnet = null) => {
   // Validate inputs
   if (!isValidIp(ip)) {
-    return { error: 'Invalid IP address' };
+    return { error: 'error.invalidIpAddress' };
   }
 
   const prefixNum = parseInt(prefix, 10);
   if (!isValidPrefix(prefixNum)) {
-    return { error: 'Invalid prefix (use 0-32)' };
+    return { error: 'error.invalidPrefix' };
   }
 
   const ipInt = ipToInt(ip);

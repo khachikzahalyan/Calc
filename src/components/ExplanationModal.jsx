@@ -1,7 +1,10 @@
 import React from 'react';
+import { useI18n } from '../contexts/I18nContext';
 import './ExplanationModal.css';
 
 const ExplanationModal = ({ isOpen, onClose, type, data }) => {
+  const { t } = useI18n();
+  
   if (!isOpen) return null;
 
   const getContent = () => {
@@ -9,37 +12,37 @@ const ExplanationModal = ({ isOpen, onClose, type, data }) => {
       case 'firstIp': {
         const subnetNum = data.subnetIndex + 1;
         return {
-          title: `First Usable IP - Subnet ${subnetNum}`,
+          title: t('modal.firstIpTitle').replace('{subnet}', subnetNum),
           value: data.value,
-          explanation: `The first usable IP address in this subnet. After the network address, the first IP becomes usable for host assignment.`,
+          explanation: t('modal.firstIpExplanation'),
           formula: [
-            `Network Address: ${data.network}`,
-            `Add 1 to network address: ${data.network} + 1 = ${data.value}`,
-            `This is the first host-assignable address in the subnet.`,
+            `${t('formula.networkAddress')}: ${data.network}`,
+            `${t('formula.add1')}: ${data.network} + 1 = ${data.value}`,
+            t('formula.firstHostAssignable'),
           ],
-          example: `In this subnet:
-• Network Address (reserved): ${data.network}
-• First Usable IP (first host): ${data.value}
-• Last Usable IP: ${data.lastIp}
-• Broadcast Address (reserved): ${data.broadcast}`
+          example: `${t('formula.inThisSubnet')}:
+• ${t('formula.networkAddressReserved')}: ${data.network}
+• ${t('formula.firstUsableIp')}: ${data.value}
+• ${t('formula.lastUsableIp')}: ${data.lastIp}
+• ${t('formula.broadcastReserved')}: ${data.broadcast}`
         };
       }
       case 'lastIp': {
         const subnetNum = data.subnetIndex + 1;
         return {
-          title: `Last Usable IP - Subnet ${subnetNum}`,
+          title: t('modal.lastIpTitle').replace('{subnet}', subnetNum),
           value: data.value,
-          explanation: `The last usable IP address in this subnet. It's one address before the broadcast address.`,
+          explanation: t('modal.lastIpExplanation'),
           formula: [
-            `Broadcast Address: ${data.broadcast}`,
-            `Subtract 1 from broadcast: ${data.broadcast} - 1 = ${data.value}`,
-            `This is the last host-assignable address in the subnet.`,
+            `${t('formula.broadcastAddress')}: ${data.broadcast}`,
+            `${t('formula.subtract1')}: ${data.broadcast} - 1 = ${data.value}`,
+            t('formula.lastHostAssignable'),
           ],
-          example: `In this subnet:
-• Network Address (reserved): ${data.network}
-• First Usable IP: ${data.firstIp}
-• Last Usable IP (last host): ${data.value}
-• Broadcast Address (reserved): ${data.broadcast}`
+          example: `${t('formula.inThisSubnet')}:
+• ${t('formula.networkAddressReserved')}: ${data.network}
+• ${t('formula.firstUsableIp')}: ${data.firstIp}
+• ${t('formula.lastUsableIp')}: ${data.value}
+• ${t('formula.broadcastReserved')}: ${data.broadcast}`
         };
       }
       case 'subnetMask': {
@@ -47,42 +50,42 @@ const ExplanationModal = ({ isOpen, onClose, type, data }) => {
         const prefix = data.prefix;
         const hostBits = 32 - prefix;
         return {
-          title: `Subnet Mask - Subnet ${subnetNum}`,
+          title: t('modal.subnetMaskTitle').replace('{subnet}', subnetNum),
           value: data.value,
-          explanation: `The subnet mask defines which bits identify the network and which identify hosts within that network.`,
+          explanation: t('modal.subnetMaskExplanation'),
           formula: [
-            `Prefix: /${prefix} means ${prefix} network bits + ${hostBits} host bits`,
-            `Network bits: ${prefix} ones = ${data.value.split('.')[0]}.${data.value.split('.')[1]}.${data.value.split('.')[2]}.${data.value.split('.')[3]}`,
-            `Binary representation: ${' '.repeat(0)}${data.maskBinary?.substring(0, 16)}...${data.maskBinary?.substring(-16) || ''}`,
-            `Decimal representation: ${data.value}`,
+            `${t('formula.prefix')}: /${prefix} ${t('formula.meansBits')} ${prefix} ${t('formula.networkBits')} + ${hostBits} ${t('formula.hostBits')}`,
+            `${t('formula.networkBitsValue')}: ${prefix} ${t('formula.ones')}: ${data.value}`,
+            `${t('formula.binaryRepresentation')}: ${' '.repeat(0)}${data.maskBinary?.substring(0, 16)}...${data.maskBinary?.substring(-16) || ''}`,
+            `${t('formula.decimalRepresentation')}: ${data.value}`,
           ],
-          example: `For /${prefix} prefix:
-• Network bits: ${prefix} (ones in binary)
-• Host bits: ${hostBits} (zeros in binary)
-• Subnet Mask: ${data.value}
-• This allows for ${data.usableHosts} usable host addresses`
+          example: `${t('formula.forPrefix')} /${prefix}:
+• ${t('formula.networkBits')}: ${prefix} (${t('formula.onesInBinary')})
+• ${t('formula.hostBits')}: ${hostBits} (${t('formula.zerosInBinary')})
+• ${t('formula.subnetMask')}: ${data.value}
+• ${t('formula.allowsForUsableHosts').replace('{hosts}', data.usableHosts)}`
         };
       }
       case 'usableHosts': {
         const subnetNum = data.subnetIndex + 1;
         const blockSize = data.blockSize;
         return {
-          title: `Usable Hosts - Subnet ${subnetNum}`,
+          title: t('modal.usableHostsTitle').replace('{subnet}', subnetNum),
           value: data.value,
-          explanation: `Total number of IP addresses that can be assigned to devices in this subnet, excluding network and broadcast addresses.`,
+          explanation: t('modal.usableHostsExplanation'),
           formula: [
-            `Block Size (Total IPs): ${blockSize}`,
-            `Subtract Network Address: 1`,
-            `Subtract Broadcast Address: 1`,
-            `Usable Hosts = ${blockSize} - 2 = ${data.value}`,
-            `Formula: 2^(32 - Prefix) - 2 = 2^(${32 - data.prefix}) - 2 = ${data.value}`,
+            `${t('formula.blockSize')} (${t('formula.totalIps')}): ${blockSize}`,
+            `${t('formula.subtractNetworkAddress')}: 1`,
+            `${t('formula.subtractBroadcastAddress')}: 1`,
+            `${t('formula.usableHosts')} = ${blockSize} - 2 = ${data.value}`,
+            `${t('formula.formula')}: 2^(32 - ${t('formula.prefix')}) - 2 = 2^(${32 - data.prefix}) - 2 = ${data.value}`,
           ],
-          example: `In this /${data.prefix} subnet:
-• Total IP addresses: ${blockSize}
-• Network Address (not usable): 1
-• Broadcast Address (not usable): 1
-• Usable Hosts: ${data.value}
-• This subnet can support ${data.value} devices`
+          example: `${t('formula.inThisPrefix')} /${data.prefix} ${t('formula.subnet')}:
+• ${t('formula.totalIpAddresses')}: ${blockSize}
+• ${t('formula.networkAddressNotUsable')}: 1
+• ${t('formula.broadcastAddressNotUsable')}: 1
+• ${t('formula.usableHosts')}: ${data.value}
+• ${t('formula.canSupport').replace('{devices}', data.value)}`
         };
       }
       case 'networkMask': {
@@ -101,67 +104,67 @@ const ExplanationModal = ({ isOpen, onClose, type, data }) => {
         };
         
         return {
-          title: 'Subnet Mask Calculation',
+          title: t('modal.networkMaskTitle'),
           value: data.value,
-          explanation: `The subnet mask is a 32-bit number that divides the IP address into network and host portions. Each bit is either 1 (network) or 0 (host).`,
+          explanation: t('modal.networkMaskExplanation'),
           formula: [
-            `Prefix: /${prefix} means ${networkBits} network bits (ones) and ${hostBits} host bits (zeros)`,
-            `Binary: ${generateBinary()}`,
-            `Decimal representation: ${data.value}`,
-            `This mask allows for ${data.usableHosts} usable host addresses in the network`,
+            `${t('formula.prefix')}: /${prefix} ${t('formula.means')}} ${networkBits} ${t('formula.networkBits')} (${t('formula.ones')}) ${t('formula.and')}} ${hostBits} ${t('formula.hostBits')} (${t('formula.zeros')})`,
+            `${t('formula.binary')}: ${generateBinary()}`,
+            `${t('formula.decimalRepresentation')}: ${data.value}`,
+            `${t('formula.allowsFor')} ${data.usableHosts} ${t('formula.usableHostAddresses')}}`,
           ],
-          example: `For /${prefix}:
-• Network bits: ${networkBits} (identify the network)
-• Host bits: ${hostBits} (identify the host within network)
-• Subnet Mask: ${data.value}
-• Total IPs: ${data.totalIps}
-• Usable IPs: ${data.usableHosts}
-• This means you can have ${data.usableHosts} devices on this network`
+          example: `${t('formula.forPrefix')} /${prefix}:
+• ${t('formula.networkBits')}: ${networkBits} (${t('formula.identifyNetwork')}})
+• ${t('formula.hostBits')}: ${hostBits} (${t('formula.identifyHost')}})
+• ${t('formula.subnetMask')}: ${data.value}
+• ${t('formula.totalIps')}: ${data.totalIps}
+• ${t('formula.usableIps')}: ${data.usableHosts}
+• ${t('formula.meansCanHave').replace('{devices}', data.usableHosts)}}`
         };
       }
       case 'networkAddress': {
         return {
-          title: 'Network Address Calculation',
+          title: t('modal.networkAddressTitle'),
           value: data.value,
-          explanation: `The network address is the first address in a network. It's calculated by performing a bitwise AND between the IP and subnet mask. All host bits are set to 0.`,
+          explanation: t('modal.networkAddressExplanation'),
           formula: [
-            `IP Address (binary): ${data.ipBinary || 'binary form of ' + data.ip}`,
-            `Subnet Mask (binary): Network bits = 1, Host bits = 0`,
-            `Bitwise AND: IP AND Mask = Network Address`,
-            `Result: ${data.value}`,
-            `All host bits are 0, making this the network's starting point`,
+            `${t('formula.ipAddressBinary')}: ${data.ipBinary || t('formula.binaryFormOf') + ' ' + data.ip}`,
+            `${t('formula.subnetMaskBinary')}`,
+            `${t('formula.bitwiseAnd')}`,
+            `${t('formula.result')}: ${data.value}`,
+            t('formula.allHostBitsZero'),
           ],
-          example: `Network Address: ${data.value}
-• This is the first address in the network
-• It CANNOT be assigned to any device
-• Used to identify the network itself
-• Example: In class used to refer to the network as "${data.value}/${data.prefix}"`
+          example: `${t('formula.networkAddress')}: ${data.value}
+• ${t('formula.firstAddressNetwork')}}
+• ${t('formula.cannotAssignDevice')}
+• ${t('formula.usedIdentifyNetwork')}
+• ${t('formula.exampleClassUsed')}} "${data.value}/${data.prefix}"`
         };
       }
       case 'broadcastAddress': {
         return {
-          title: 'Broadcast Address Calculation',
+          title: t('modal.broadcastAddressTitle'),
           value: data.value,
-          explanation: `The broadcast address is the last address in a network. It's calculated by setting all host bits to 1. Packets sent here reach all devices on the network.`,
+          explanation: t('modal.broadcastAddressExplanation'),
           formula: [
-            `Network Address: ${data.networkAddress}`,
-            `Set all host bits to 1 (binary)`,
-            `Result: ${data.value}`,
-            `Total IPs in network: ${data.totalIps}`,
-            `Broadcast = Network Address + (Total IPs - 1)`,
+            `${t('formula.networkAddress')}: ${data.networkAddress}`,
+            t('formula.setAllHostBits'),
+            `${t('formula.result')}: ${data.value}`,
+            `${t('formula.totalIpsInNetwork')}: ${data.totalIps}`,
+            `${t('formula.broadcast')}} = ${t('formula.networkAddress')}} + ({{t('formula.totalIps')}} - 1)`,
           ],
-          example: `Broadcast Address: ${data.value}
-• This is the last address in the network
-• Used to send messages to ALL devices
-• CANNOT be assigned to any device
-• Network size: ${data.totalIps} total IPs
-• First IP: ${data.firstUsableIp}
-• Last IP: ${data.lastUsableIp}
-• Broadcast: ${data.value}`
+          example: `${t('formula.broadcastAddress')}: ${data.value}
+• {{t('formula.lastAddressNetwork')}}}
+• {{t('formula.usedSendMessagesAll')}}}
+• {{t('formula.cannotAssignDevice')}}}
+• {{t('formula.networkSize')}}: ${data.totalIps} {{t('formula.totalIps')}}
+• {{t('formula.firstIp')}}: ${data.firstUsableIp}
+• {{t('formula.lastIp')}}: ${data.lastUsableIp}
+• {{t('formula.broadcast')}}: ${data.value}`
         };
       }
       default:
-        return { title: 'Information', value: '', explanation: '', formula: [], example: '' };
+        return { title: t('modal.information'), value: '', explanation: '', formula: [], example: '' };
     }
   };
 
@@ -176,26 +179,26 @@ const ExplanationModal = ({ isOpen, onClose, type, data }) => {
         
         <div className="modal-body">
           <div className="modal-section value-section">
-            <h3>Value</h3>
+            <h3>{t('modal.value')}</h3>
             <div className="modal-value">
               <span className="value-text">{content.value}</span>
               <button 
                 className="copy-btn-modal" 
                 onClick={() => navigator.clipboard.writeText(content.value)}
-                title="Copy to clipboard"
+                title={t('modal.copyToClipboard')}
               >
-                📋 Copy
+                📋 {t('modal.copy')}
               </button>
             </div>
           </div>
 
           <div className="modal-section explanation-section">
-            <h3>Explanation</h3>
+            <h3>{t('modal.explanation')}</h3>
             <p className="explanation-text">{content.explanation}</p>
           </div>
 
           <div className="modal-section formula-section">
-            <h3>Formula & Calculation</h3>
+            <h3>{t('modal.formulaCalculation')}</h3>
             <div className="formula-steps">
               {content.formula.map((step, idx) => (
                 <div key={idx} className="formula-step">
@@ -207,7 +210,7 @@ const ExplanationModal = ({ isOpen, onClose, type, data }) => {
           </div>
 
           <div className="modal-section example-section">
-            <h3>Example in This Subnet</h3>
+            <h3>{t('modal.exampleInThisSubnet')}</h3>
             <pre className="example-text">{content.example}</pre>
           </div>
         </div>

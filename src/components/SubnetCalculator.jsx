@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { calculateSubnet } from '../utils/ip';
 import { calculateVLSM } from '../utils/vlsm';
 import ResultDisplay from './ResultDisplay';
+import { useI18n } from '../contexts/I18nContext';
 import './SubnetCalculator.css';
 
 const SubnetCalculator = () => {
+  const { t, language, changeLanguage } = useI18n();
   // Network Information
   const [ip, setIp] = useState('10.0.0.0');
   const [prefix, setPrefix] = useState('24');
@@ -53,54 +55,79 @@ const SubnetCalculator = () => {
       {/* Header */}
       <div className="calculator-header">
         <div className="header-content">
-          <h1>IPv4 Subnet Calculator</h1>
-          <p>Standard Subnetting & VLSM Calculation Tool</p>
+          <h1>{t('title')}</h1>
+          <p>{t('subtitle')}</p>
         </div>
-        <button
-          className="dark-mode-toggle"
-          onClick={() => setDarkMode(!darkMode)}
-          aria-label="Toggle dark mode"
-        >
-          {darkMode ? '☀️' : '🌙'}
-        </button>
+        <div className="header-controls">
+          <div className="language-selector">
+            <button
+              className={`lang-btn ${language === 'en' ? 'active' : ''}`}
+              onClick={() => changeLanguage('en')}
+              title={t('language.en')}
+            >
+              ENG
+            </button>
+            <button
+              className={`lang-btn ${language === 'ru' ? 'active' : ''}`}
+              onClick={() => changeLanguage('ru')}
+              title={t('language.ru')}
+            >
+              РУС
+            </button>
+            <button
+              className={`lang-btn ${language === 'hy' ? 'active' : ''}`}
+              onClick={() => changeLanguage('hy')}
+              title={t('language.hy')}
+            >
+              ARM
+            </button>
+          </div>
+          <button
+            className="dark-mode-toggle"
+            onClick={() => setDarkMode(!darkMode)}
+            aria-label={t('darkMode.toggle')}
+          >
+            {darkMode ? '☀️' : '🌙'}
+          </button>
+        </div>
       </div>
 
       <div className="calculator-container">
         {/* Input Panel */}
         <div className="input-panel">
           {/* Calculator Mode Toggle */}
-          <div className="section-title">Calculator Mode</div>
+          <div className="section-title">{t('calculator.mode')}</div>
           <div className="mode-selector" style={{ marginBottom: '24px' }}>
             <button
               className={`mode-btn ${calculatorMode === 'standard' ? 'active' : ''}`}
               onClick={() => setCalculatorMode('standard')}
             >
-              Standard Subnetting
+              {t('calculator.standardSubnetting')}
             </button>
             <button
               className={`mode-btn ${calculatorMode === 'vlsm' ? 'active' : ''}`}
               onClick={() => setCalculatorMode('vlsm')}
             >
-              VLSM
+              {t('calculator.vlsm')}
             </button>
           </div>
 
-          <div className="section-title">Network Information</div>
+          <div className="section-title">{t('network.information')}</div>
 
           <div className="form-group">
-            <label htmlFor="ip-input">Base IP Address</label>
+            <label htmlFor="ip-input">{t('network.baseIpAddress')}</label>
             <input
               id="ip-input"
               type="text"
               value={ip}
               onChange={(e) => setIp(e.target.value)}
-              placeholder="e.g., 10.0.0.0"
+              placeholder={t('network.example10000')}
               className="form-input"
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="prefix-input">Base CIDR Prefix</label>
+            <label htmlFor="prefix-input">{t('network.baseCidrPrefix')}</label>
             <div className="input-with-label">
               <input
                 id="prefix-input"
@@ -119,7 +146,7 @@ const SubnetCalculator = () => {
           {calculatorMode === 'standard' && (
             <>
               <div className="section-title" style={{ marginTop: '24px' }}>
-                Subnetting Options
+                {t('subnetting.options')}
               </div>
 
               <div className="mode-selector">
@@ -127,26 +154,26 @@ const SubnetCalculator = () => {
                   className={`mode-btn ${subnettingMode === 'subnets' ? 'active' : ''}`}
                   onClick={() => setSubnettingMode('subnets')}
                 >
-                  By Number of Subnets
+                  {t('subnetting.byNumberOfSubnets')}
                 </button>
                 <button
                   className={`mode-btn ${subnettingMode === 'hosts' ? 'active' : ''}`}
                   onClick={() => setSubnettingMode('hosts')}
                 >
-                  By Hosts per Subnet
+                  {t('subnetting.byHostsPerSubnet')}
                 </button>
               </div>
 
               {subnettingMode === 'subnets' && (
                 <div className="form-group">
-                  <label htmlFor="subnets-input">Number of Subnets</label>
+                  <label htmlFor="subnets-input">{t('subnetting.numberOfSubnets')}</label>
                   <input
                     id="subnets-input"
                     type="number"
                     value={numSubnets}
                     onChange={(e) => setNumSubnets(e.target.value)}
                     min="1"
-                    placeholder="e.g., 3"
+                    placeholder={t('subnetting.example3')}
                     className="form-input"
                   />
                 </div>
@@ -154,14 +181,14 @@ const SubnetCalculator = () => {
 
               {subnettingMode === 'hosts' && (
                 <div className="form-group">
-                  <label htmlFor="hosts-input">Hosts per Subnet</label>
+                  <label htmlFor="hosts-input">{t('subnetting.hostsPerSubnet')}</label>
                   <input
                     id="hosts-input"
                     type="number"
                     value={hostsPerSubnet}
                     onChange={(e) => setHostsPerSubnet(e.target.value)}
                     min="1"
-                    placeholder="e.g., 250"
+                    placeholder={t('subnetting.example250')}
                     className="form-input"
                   />
                 </div>
@@ -173,21 +200,21 @@ const SubnetCalculator = () => {
           {calculatorMode === 'vlsm' && (
             <>
               <div className="section-title" style={{ marginTop: '24px' }}>
-                Host Requirements
+                {t('vlsm.hostRequirements')}
               </div>
 
               <div className="form-group">
                 <label htmlFor="hosts-requirements">
-                  Required Hosts
+                  {t('vlsm.requiredHosts')}
                   <span className="subtitle">
-                    Space/comma separated (e.g., "9 1" or "10, 5, 2, 1")
+                    {t('vlsm.spaceSeparated')}
                   </span>
                 </label>
                 <textarea
                   id="hosts-requirements"
                   value={hostRequirements}
                   onChange={(e) => setHostRequirements(e.target.value)}
-                  placeholder="e.g., 9 1&#10;or 10, 5, 2, 1"
+                  placeholder={t('vlsm.example')}
                   className="form-input textarea-input"
                   rows="3"
                 />
@@ -195,16 +222,14 @@ const SubnetCalculator = () => {
 
               <div className="info-box">
                 <p>
-                  <strong>How VLSM works:</strong> Allocates subnets with different
-                  sizes based on host requirements. Largest subnet is assigned first to
-                  minimize wasted IPs.
+                  <strong>{t('vlsm.howItWorks')}</strong> {t('vlsm.description')}
                 </p>
               </div>
             </>
           )}
 
           <button className="calculate-btn" onClick={handleCalculate}>
-            Calculate
+            {t('button.calculate')}
           </button>
         </div>
 
@@ -223,10 +248,7 @@ const SubnetCalculator = () => {
 
       {/* Footer */}
       <div className="calculator-footer">
-        <p>
-          Built with React • All calculations use bitwise operations • No external
-          libraries
-        </p>
+        <p>{t('footer')}</p>
       </div>
     </div>
   );

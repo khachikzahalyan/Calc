@@ -10,6 +10,7 @@ import {
   calculateTotalIps,
   isValidIp,
   isValidPrefix,
+  ipToBinary,
 } from './ip';
 
 /**
@@ -35,7 +36,7 @@ export const getNextPowerOfTwo = (n) => {
  */
 export const calculatePrefixForHostCount = (requiredHosts) => {
   if (requiredHosts < 1) {
-    return { error: 'At least 1 host required' };
+    return { error: 'error.atLeast1HostRequired' };
   }
 
   // Need to account for network and broadcast addresses
@@ -101,7 +102,7 @@ export const parseHostRequirements = (input) => {
               .filter((x) => !isNaN(x) && x > 0);
           }
         } catch (e) {
-          return { error: 'Invalid format. Use space/comma separated or JSON array.' };
+          return { error: 'error.invalidFormatHostRequirements' };
         }
       }
     }
@@ -114,7 +115,7 @@ export const parseHostRequirements = (input) => {
   }
 
   if (requirements.length === 0) {
-    return { error: 'No valid host requirements found' };
+    return { error: 'error.noValidHostRequirements' };
   }
 
   return requirements;
@@ -130,12 +131,12 @@ export const parseHostRequirements = (input) => {
 export const calculateVLSM = (baseIp, basePrefix, hostRequirements) => {
   // Validate inputs
   if (!isValidIp(baseIp)) {
-    return { error: 'Invalid base IP address' };
+    return { error: 'error.invalidBaseIpAddress' };
   }
 
   const basePrefixNum = parseInt(basePrefix, 10);
   if (!isValidPrefix(basePrefixNum)) {
-    return { error: 'Invalid base prefix (use 0-32)' };
+    return { error: 'error.invalidBasePrefix' };
   }
 
   // Parse host requirements
@@ -149,7 +150,7 @@ export const calculateVLSM = (baseIp, basePrefix, hostRequirements) => {
 
   // Validate that requirements are positive
   if (!requirements.every((x) => x > 0)) {
-    return { error: 'All host requirements must be positive' };
+    return { error: 'error.allHostsMustBePositive' };
   }
 
   // Check if total hosts exceed base network capacity
@@ -166,7 +167,7 @@ export const calculateVLSM = (baseIp, basePrefix, hostRequirements) => {
 
   if (totalRequiredIps > baseTotalIps) {
     return {
-      error: `Total required IPs (${totalRequiredIps}) exceed base network capacity (${baseTotalIps})`,
+      error: 'error.insufficientCapacity',
     };
   }
 
@@ -221,6 +222,7 @@ export const calculateVLSM = (baseIp, basePrefix, hostRequirements) => {
       blockSize,
       prefix: subnetPrefix,
       subnetMask: intToIp(subnetMask),
+      maskBinary: ipToBinary(subnetMask),
       network: intToIp(network),
       networkInt: network,
       broadcast: intToIp(broadcast),
