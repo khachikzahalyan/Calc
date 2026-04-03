@@ -23,26 +23,53 @@ const SubnetCalculator = () => {
   const [calculatorMode, setCalculatorMode] = useState('standard'); // 'standard' or 'vlsm'
   const [darkMode, setDarkMode] = useState(false);
   const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [lastInputs, setLastInputs] = useState(null);
+
+  const getCurrentInputs = () => ({
+    ip,
+    prefix,
+    numSubnets,
+    hostsPerSubnet,
+    hostRequirements,
+    calculatorMode,
+    subnettingMode,
+  });
+
+  const inputsChanged = () => {
+    if (!lastInputs) return true;
+    const current = getCurrentInputs();
+    return JSON.stringify(current) !== JSON.stringify(lastInputs);
+  };
 
   // Calculate only when button is clicked
   const handleCalculate = () => {
-    if (calculatorMode === 'standard') {
-      let numSubnetsVal = null;
-      let hostsVal = null;
+    if (!inputsChanged()) return;
 
-      if (subnettingMode === 'subnets' && numSubnets.trim()) {
-        numSubnetsVal = parseInt(numSubnets, 10);
-      } else if (subnettingMode === 'hosts' && hostsPerSubnet.trim()) {
-        hostsVal = parseInt(hostsPerSubnet, 10);
+    setLoading(true);
+    
+    setTimeout(() => {
+      if (calculatorMode === 'standard') {
+        let numSubnetsVal = null;
+        let hostsVal = null;
+
+        if (subnettingMode === 'subnets' && numSubnets.trim()) {
+          numSubnetsVal = parseInt(numSubnets, 10);
+        } else if (subnettingMode === 'hosts' && hostsPerSubnet.trim()) {
+          hostsVal = parseInt(hostsPerSubnet, 10);
+        }
+
+        const calcResult = calculateSubnet(ip, prefix, numSubnetsVal, hostsVal);
+        setResult(calcResult);
+      } else {
+        // VLSM Mode
+        const calcResult = calculateVLSM(ip, prefix, hostRequirements);
+        setResult(calcResult);
       }
-
-      const calcResult = calculateSubnet(ip, prefix, numSubnetsVal, hostsVal);
-      setResult(calcResult);
-    } else {
-      // VLSM Mode
-      const calcResult = calculateVLSM(ip, prefix, hostRequirements);
-      setResult(calcResult);
-    }
+      
+      setLastInputs(getCurrentInputs());
+      setLoading(false);
+    }, 650);
   };
 
   const handleCopyToClipboard = (text, label) => {
@@ -235,14 +262,19 @@ const SubnetCalculator = () => {
 
         {/* Results Panel */}
         <div className="results-panel">
-          {result && (
+          {loading ? (
+            <div className="loading-container">
+              <div className="spinner"></div>
+              <p className="loading-text">{t('ui.loading') || 'Loading...'}</p>
+            </div>
+          ) : result ? (
             <ResultDisplay
               result={result}
               onCopy={handleCopyToClipboard}
               mode={subnettingMode}
               calculatorMode={calculatorMode}
             />
-          )}
+          ) : null}
         </div>
       </div>
 

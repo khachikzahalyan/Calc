@@ -255,7 +255,8 @@
 
   "ui": {
     "explainClick": "Click to see explanation",
-    "copyClipboard": "Copy to clipboard"
+    "copyClipboard": "Copy to clipboard",
+    "loading": "Loading..."
   },
 
   "language": {
