@@ -108,18 +108,18 @@ const ExplanationModal = ({ isOpen, onClose, type, data }) => {
           value: data.value,
           explanation: t('modal.networkMaskExplanation'),
           formula: [
-            `${t('formula.prefix')}: /${prefix} ${t('formula.means')}} ${networkBits} ${t('formula.networkBits')} (${t('formula.ones')}) ${t('formula.and')}} ${hostBits} ${t('formula.hostBits')} (${t('formula.zeros')})`,
+            `/${prefix} = ${networkBits} ${t('formula.networkBits')} (${t('formula.ones')}) + ${hostBits} ${t('formula.hostBits')} (${t('formula.zeros')})`,
             `${t('formula.binary')}: ${generateBinary()}`,
             `${t('formula.decimalRepresentation')}: ${data.value}`,
-            `${t('formula.allowsFor')} ${data.usableHosts} ${t('formula.usableHostAddresses')}}`,
+            `Итого адресов: ${data.totalIps}, можно использовать ${data.usableHosts} ${t('formula.usableHostAddresses')}`,
           ],
-          example: `${t('formula.forPrefix')} /${prefix}:
-• ${t('formula.networkBits')}: ${networkBits} (${t('formula.identifyNetwork')}})
-• ${t('formula.hostBits')}: ${hostBits} (${t('formula.identifyHost')}})
-• ${t('formula.subnetMask')}: ${data.value}
-• ${t('formula.totalIps')}: ${data.totalIps}
-• ${t('formula.usableIps')}: ${data.usableHosts}
-• ${t('formula.meansCanHave').replace('{devices}', data.usableHosts)}}`
+          example: `Для /${prefix}:
+• Сетевые биты: ${networkBits} (определяют сеть)
+• Хост биты: ${hostBits} (определяют хост в сети)
+• Маска: ${data.value}
+• Всего адресов: ${data.totalIps}
+• Можно использовать: ${data.usableHosts}
+• На ${data.usableHosts} устройств`
         };
       }
       case 'networkAddress': {
@@ -135,10 +135,10 @@ const ExplanationModal = ({ isOpen, onClose, type, data }) => {
             t('formula.allHostBitsZero'),
           ],
           example: `${t('formula.networkAddress')}: ${data.value}
-• ${t('formula.firstAddressNetwork')}}
+• ${t('formula.firstAddressNetwork')}
 • ${t('formula.cannotAssignDevice')}
 • ${t('formula.usedIdentifyNetwork')}
-• ${t('formula.exampleClassUsed')}} "${data.value}/${data.prefix}"`
+• ${t('formula.exampleClassUsed')} "${data.value}/${data.prefix}"`
         };
       }
       case 'broadcastAddress': {
@@ -151,16 +151,16 @@ const ExplanationModal = ({ isOpen, onClose, type, data }) => {
             t('formula.setAllHostBits'),
             `${t('formula.result')}: ${data.value}`,
             `${t('formula.totalIpsInNetwork')}: ${data.totalIps}`,
-            `${t('formula.broadcast')}} = ${t('formula.networkAddress')}} + ({{t('formula.totalIps')}} - 1)`,
+            `${t('formula.broadcast')} = ${t('formula.networkAddress')} + (${data.totalIps} - 1)`,
           ],
           example: `${t('formula.broadcastAddress')}: ${data.value}
-• {{t('formula.lastAddressNetwork')}}}
-• {{t('formula.usedSendMessagesAll')}}}
-• {{t('formula.cannotAssignDevice')}}}
-• {{t('formula.networkSize')}}: ${data.totalIps} {{t('formula.totalIps')}}
-• {{t('formula.firstIp')}}: ${data.firstUsableIp}
-• {{t('formula.lastIp')}}: ${data.lastUsableIp}
-• {{t('formula.broadcast')}}: ${data.value}`
+• ${t('formula.lastAddressNetwork')}
+• ${t('formula.usedSendMessagesAll')}
+• ${t('formula.cannotAssignDevice')}
+• ${t('formula.networkSize')}: ${data.totalIps} ${t('formula.totalIpsLabel')}
+• ${t('formula.firstIp')}: ${data.firstUsableIp}
+• ${t('formula.lastIp')}: ${data.lastUsableIp}
+• ${t('formula.broadcast')}: ${data.value}`
         };
       }
       default:
