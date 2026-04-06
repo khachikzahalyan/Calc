@@ -7,24 +7,19 @@ import './SubnetCalculator.css';
 
 const SubnetCalculator = () => {
   const { t, language, changeLanguage } = useI18n();
-  // Network Information
   const [ip, setIp] = useState('10.0.0.0');
   const [prefix, setPrefix] = useState('24');
-  
-  // Standard Subnetting Mode
   const [numSubnets, setNumSubnets] = useState('');
   const [hostsPerSubnet, setHostsPerSubnet] = useState('');
-  const [subnettingMode, setSubnettingMode] = useState('subnets'); // 'subnets' or 'hosts'
-  
-  // VLSM Mode
+  const [subnettingMode, setSubnettingMode] = useState('subnets');
   const [hostRequirements, setHostRequirements] = useState('9 1');
-  
-  // Calculator Mode
-  const [calculatorMode, setCalculatorMode] = useState('standard'); // 'standard' or 'vlsm'
+  const [calculatorMode, setCalculatorMode] = useState('standard');
   const [darkMode, setDarkMode] = useState(false);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [lastInputs, setLastInputs] = useState(null);
+  const [toast, setToast] = useState(null);
+  const resultsPanelRef = React.useRef(null);
 
   const getCurrentInputs = () => ({
     ip,
@@ -69,52 +64,57 @@ const SubnetCalculator = () => {
       
       setLastInputs(getCurrentInputs());
       setLoading(false);
+      setTimeout(() => {
+        if (resultsPanelRef.current && window.innerWidth <= 1024) {
+          resultsPanelRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
     }, 650);
   };
 
   const handleCopyToClipboard = (text, label) => {
     navigator.clipboard.writeText(text);
-    // Could add a toast notification here
+    setToast(label);
+    setTimeout(() => setToast(null), 1800);
   };
 
   return (
     <div className={`subnet-calculator ${darkMode ? 'dark-mode' : ''}`}>
       {/* Header */}
       <div className="calculator-header">
-        <div className="header-content">
-          <h1>{t('title')}</h1>
-          <p>{t('subtitle')}</p>
-        </div>
+        <h1 className="header-title">{t('title')}</h1>
         <div className="header-controls">
-          <div className="language-selector">
-            <button
-              className={`lang-btn ${language === 'en' ? 'active' : ''}`}
-              onClick={() => changeLanguage('en')}
-              title={t('language.en')}
-            >
-              ENG
-            </button>
-            <button
-              className={`lang-btn ${language === 'ru' ? 'active' : ''}`}
-              onClick={() => changeLanguage('ru')}
-              title={t('language.ru')}
-            >
-              РУС
-            </button>
-            <button
-              className={`lang-btn ${language === 'hy' ? 'active' : ''}`}
-              onClick={() => changeLanguage('hy')}
-              title={t('language.hy')}
-            >
-              ARM
-            </button>
-          </div>
           <button
-            className="dark-mode-toggle"
+            className={`header-btn ${language === 'en' ? 'active' : ''}`}
+            onClick={() => changeLanguage('en')}
+            title={t('language.en')}
+          >
+            ENG
+          </button>
+          <button
+            className={`header-btn ${language === 'ru' ? 'active' : ''}`}
+            onClick={() => changeLanguage('ru')}
+            title={t('language.ru')}
+          >
+            РУС
+          </button>
+          <button
+            className={`header-btn ${language === 'hy' ? 'active' : ''}`}
+            onClick={() => changeLanguage('hy')}
+            title={t('language.hy')}
+          >
+            ARM
+          </button>
+          <button
+            className="header-btn dark-toggle"
             onClick={() => setDarkMode(!darkMode)}
             aria-label={t('darkMode.toggle')}
           >
-            {darkMode ? '☀️' : '🌙'}
+            {darkMode ? (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            ) : (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            )}
           </button>
         </div>
       </div>
@@ -127,13 +127,13 @@ const SubnetCalculator = () => {
           <div className="mode-selector" style={{ marginBottom: '24px' }}>
             <button
               className={`mode-btn ${calculatorMode === 'standard' ? 'active' : ''}`}
-              onClick={() => setCalculatorMode('standard')}
+              onClick={() => { setCalculatorMode('standard'); setResult(null); setLastInputs(null); }}
             >
               {t('calculator.standardSubnetting')}
             </button>
             <button
               className={`mode-btn ${calculatorMode === 'vlsm' ? 'active' : ''}`}
-              onClick={() => setCalculatorMode('vlsm')}
+              onClick={() => { setCalculatorMode('vlsm'); setResult(null); setLastInputs(null); }}
             >
               {t('calculator.vlsm')}
             </button>
@@ -237,21 +237,16 @@ const SubnetCalculator = () => {
                     {t('vlsm.spaceSeparated')}
                   </span>
                 </label>
-                <textarea
+                <input
                   id="hosts-requirements"
+                  type="text"
                   value={hostRequirements}
                   onChange={(e) => setHostRequirements(e.target.value)}
-                  placeholder={t('vlsm.example')}
-                  className="form-input textarea-input"
-                  rows="3"
+                  placeholder="100 50 20 10 5 2"
+                  className="form-input"
                 />
               </div>
 
-              <div className="info-box">
-                <p>
-                  <strong>{t('vlsm.howItWorks')}</strong> {t('vlsm.description')}
-                </p>
-              </div>
             </>
           )}
 
@@ -261,7 +256,7 @@ const SubnetCalculator = () => {
         </div>
 
         {/* Results Panel */}
-        <div className="results-panel">
+        <div className="results-panel" ref={resultsPanelRef}>
           {loading ? (
             <div className="loading-container">
               <div className="spinner"></div>
@@ -278,7 +273,12 @@ const SubnetCalculator = () => {
         </div>
       </div>
 
-
+      {toast && (
+        <div className="copy-toast" key={toast}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          {toast}
+        </div>
+      )}
     </div>
   );
 };

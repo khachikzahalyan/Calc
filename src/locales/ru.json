@@ -85,6 +85,7 @@
     "allocatedSize": "Выделенный размер",
     "firstIp": "Первый IP",
     "lastIp": "Последний IP",
+    "ipRange": "Диапазон IP",
     "summary": "Сводка",
     "subnetsCreated": "Созданные подсети:",
     "ipsUsed": "Используемые IP:",

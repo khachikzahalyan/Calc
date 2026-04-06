@@ -34,6 +34,11 @@
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   position: relative;
   animation: slideUp 0.3s ease;
+  -webkit-overflow-scrolling: touch;
+}
+
+.modal-content::before {
+  content: none;
 }
 
 @keyframes slideUp {
@@ -222,110 +227,202 @@
   overflow-x: auto;
 }
 
-/* Responsive Design */
+/* Responsive Design — Tablets */
 @media (max-width: 768px) {
   .modal-overlay {
-    padding: 12px;
+    padding: 0;
+    align-items: flex-end;
   }
 
   .modal-content {
-    border-radius: 12px;
-    max-height: 90vh;
+    border-radius: 20px 20px 0 0;
+    max-height: 88vh;
+    max-width: 100%;
+    animation: slideUpMobile 0.3s ease;
+  }
+
+  .modal-content::before {
+    content: '';
+    display: block;
+    width: 36px;
+    height: 4px;
+    background: var(--border-color);
+    border-radius: 2px;
+    margin: 10px auto 0;
+  }
+
+  @keyframes slideUpMobile {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
+  .modal-close {
+    top: 14px;
+    right: 14px;
+    width: 36px;
+    height: 36px;
+    font-size: 1.3rem;
+    background: var(--bg-secondary);
+    border-radius: 50%;
   }
 
   .modal-title {
     padding: 20px 20px 0;
-    font-size: 1.25rem;
-  }
-
-  .modal-body {
-    padding: 20px;
-    gap: 16px;
-  }
-
-  .modal-section {
-    padding: 14px;
-  }
-
-  .modal-section h3 {
-    font-size: 0.9rem;
-    margin-bottom: 10px;
-  }
-
-  .value-text {
-    font-size: 1.1rem;
-  }
-
-  .step-text {
-    font-size: 0.85rem;
-  }
-
-  .example-text {
-    font-size: 0.8rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .modal-overlay {
-    padding: 8px;
-  }
-
-  .modal-content {
-    border-radius: 10px;
-    max-height: 95vh;
-  }
-
-  .modal-title {
-    padding: 16px 16px 0;
-    font-size: 1.1rem;
-  }
-
-  .modal-close {
-    top: 12px;
-    right: 12px;
-    width: 28px;
-    height: 28px;
-    font-size: 1.25rem;
+    font-size: 1.15rem;
+    padding-right: 52px;
+    text-align: left;
   }
 
   .modal-body {
     padding: 16px;
-    gap: 12px;
+    gap: 14px;
   }
 
   .modal-section {
     padding: 12px;
+    border-radius: 10px;
+  }
+
+  .modal-section h3 {
+    font-size: 0.85rem;
+    margin-bottom: 10px;
   }
 
   .modal-value {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .copy-btn-modal {
-    width: 100%;
-  }
-
-  .formula-step {
+    padding: 12px;
     gap: 10px;
-    padding: 10px;
-  }
-
-  .step-number {
-    min-width: 24px;
-    height: 24px;
-    font-size: 0.8rem;
   }
 
   .value-text {
     font-size: 1rem;
   }
 
-  .step-text {
+  .copy-btn-modal {
+    padding: 10px 14px;
+    min-height: 40px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+  }
+
+  .formula-step {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .step-number {
+    min-width: 26px;
+    height: 26px;
     font-size: 0.8rem;
   }
 
+  .step-text {
+    font-size: 0.82rem;
+    line-height: 1.4;
+  }
+
   .example-text {
+    font-size: 0.78rem;
+    padding: 10px;
+    line-height: 1.45;
+  }
+}
+
+/* Responsive — Small mobile */
+@media (max-width: 480px) {
+  .modal-content {
+    max-height: 92vh;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .modal-close {
+    top: 12px;
+    right: 12px;
+    width: 34px;
+    height: 34px;
+    font-size: 1.2rem;
+  }
+
+  .modal-title {
+    padding: 16px 16px 0;
+    font-size: 1.05rem;
+    padding-right: 50px;
+  }
+
+  .modal-body {
+    padding: 14px;
+    gap: 10px;
+  }
+
+  .modal-section {
+    padding: 10px;
+    border-radius: 8px;
+  }
+
+  .modal-section h3 {
+    font-size: 0.8rem;
+  }
+
+  .modal-value {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 10px;
+  }
+
+  .value-text {
+    font-size: 0.92rem;
+    text-align: center;
+  }
+
+  .copy-btn-modal {
+    width: 100%;
+    min-height: 44px;
+    font-size: 0.82rem;
+  }
+
+  .formula-step {
+    gap: 8px;
+    padding: 8px;
+    border-left-width: 2px;
+  }
+
+  .step-number {
+    min-width: 22px;
+    height: 22px;
     font-size: 0.75rem;
+  }
+
+  .step-text {
+    font-size: 0.78rem;
+  }
+
+  .example-text {
+    font-size: 0.72rem;
+    padding: 8px;
+  }
+}
+
+/* Extra small */
+@media (max-width: 375px) {
+  .modal-title {
+    font-size: 0.95rem;
+    padding: 14px 14px 0;
+    padding-right: 46px;
+  }
+
+  .modal-body {
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .value-text {
+    font-size: 0.85rem;
+  }
+
+  .step-text {
+    font-size: 0.72rem;
+  }
+
+  .example-text {
+    font-size: 0.68rem;
   }
 }

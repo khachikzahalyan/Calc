@@ -85,6 +85,7 @@
     "allocatedSize": "Allocated Size",
     "firstIp": "First IP",
     "lastIp": "Last IP",
+    "ipRange": "IP Range",
     "summary": "Summary",
     "subnetsCreated": "Subnets Created:",
     "ipsUsed": "IPs Used:",

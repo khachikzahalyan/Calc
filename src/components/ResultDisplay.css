@@ -113,7 +113,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: 10px;
 }
 
 .value {
@@ -175,24 +175,29 @@
 }
 
 .copy-btn {
-  background: var(--primary-color);
-  color: white;
-  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
   border-radius: 6px;
-  padding: 8px 12px;
+  width: 28px;
+  height: 28px;
+  padding: 0;
   cursor: pointer;
-  font-size: 1rem;
   transition: all 0.2s ease;
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .copy-btn:hover {
-  background: var(--primary-dark);
-  transform: scale(1.1);
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+  background: rgba(37, 99, 235, 0.06);
 }
 
 .copy-btn:active {
-  transform: scale(0.95);
+  transform: scale(0.9);
 }
 
 /* Subnetting Section */
@@ -762,84 +767,56 @@
   }
 }
 
-@media (max-width: 768px) {
-  .vlsm-subnets-cards {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-
-  .subnets-cards {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-
-  .info-row {
-    grid-template-columns: 1fr;
-  }
-
-  .subnet-card-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-
-  .subnet-card-header h4 {
-    margin: 0;
-  }
-}
-
-/* Responsive Design */
-
-/* Tablets */
+/* ===== MOBILE 768px ===== */
 @media (max-width: 768px) {
   .result-display {
-    gap: 16px;
+    gap: 14px;
   }
 
   .result-error {
-    padding: 20px;
-    border-radius: 10px;
+    padding: 20px 16px;
+    border-radius: 12px;
   }
 
-  .error-icon {
-    font-size: 2.5rem;
-    margin-bottom: 12px;
-  }
+  .error-icon { margin-bottom: 12px; }
+  .error-icon svg { width: 40px; height: 40px; }
 
   .result-error h3 {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
+    margin: 10px 0 6px;
   }
 
   .result-error p {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
   }
 
   .result-section {
-    padding: 16px;
-    border-radius: 10px;
+    padding: 14px;
+    border-radius: 12px;
   }
 
   .section-header {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 16px;
+    align-items: stretch;
+    gap: 10px;
+    margin-bottom: 14px;
   }
 
   .section-header h3 {
-    font-size: 1.05rem;
+    font-size: 1rem;
   }
 
   .binary-toggle {
     width: 100%;
     padding: 10px 14px;
-    font-size: 0.85rem;
-    min-height: 40px;
+    font-size: 0.82rem;
+    min-height: 44px;
+    border-radius: 8px;
   }
 
   .info-grid {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 10px;
   }
 
   .info-item {
@@ -848,92 +825,94 @@
   }
 
   .info-item label {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
   }
 
   .value {
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
 
   .subnet-info-grid {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 8px;
   }
 
   .subnet-info-item {
-    padding: 10px;
+    padding: 10px 6px;
     border-radius: 8px;
   }
 
   .subnet-info-item label {
-    font-size: 0.7rem;
+    font-size: 0.6rem;
+    margin-bottom: 4px;
   }
 
   .subnet-info-item .value {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
   }
 
   .explanation-box {
     padding: 12px;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     border-radius: 8px;
+  }
+
+  .explanation-box p {
+    line-height: 1.5;
+    font-size: 0.82rem;
   }
 
   .subnetting-section {
     margin-top: 0;
   }
 
-  .vlsm-subnets-cards {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-
+  .vlsm-subnets-cards,
   .subnets-cards {
     grid-template-columns: 1fr;
-    gap: 14px;
+    gap: 12px;
   }
 
   .subnet-card {
-    padding: 16px;
+    padding: 14px;
     border-radius: 10px;
   }
 
   .subnet-card-header {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
     gap: 8px;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     padding-bottom: 10px;
   }
 
   .subnet-card-header h4 {
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
 
   .subnet-prefix-badge {
     padding: 4px 10px;
-    font-size: 0.8rem;
-    align-self: flex-end;
+    font-size: 0.78rem;
   }
 
   .info-row {
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 8px;
   }
 
   .info-col,
   .info-full {
-    gap: 4px;
+    gap: 3px;
   }
 
   .info-col label,
   .info-full label {
-    font-size: 0.65rem;
+    font-size: 0.62rem;
   }
 
   .info-col .value,
   .info-full .value {
-    font-size: 0.9rem;
+    font-size: 0.88rem;
   }
 
   .copy-cell {
@@ -944,143 +923,119 @@
   .small-copy-btn {
     padding: 4px 6px;
     font-size: 0.7rem;
-    min-height: 28px;
+    min-height: 32px;
   }
 
   .reference-grid {
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
 
-  .reference-item {
-    padding: 12px;
-  }
-
-  .reference-item strong {
-    font-size: 0.75rem;
-  }
-
-  .reference-item p {
-    font-size: 1rem;
-  }
+  .reference-item { padding: 10px; }
+  .reference-item strong { font-size: 0.7rem; }
+  .reference-item p { font-size: 0.92rem; }
 
   .summary-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
   }
 
   .summary-item {
+    padding: 10px;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .summary-item .label { font-size: 0.75rem; }
+  .summary-item .value { font-size: 1rem; }
+
+  .vlsm-info {
     padding: 12px;
+    font-size: 0.85rem;
   }
 
-  .summary-item .label {
-    font-size: 0.8rem;
-  }
-
-  .summary-item .value {
-    font-size: 1.1rem;
-  }
-
-  .vlsm-subnets-table {
-    font-size: 0.8rem;
-  }
-
-  .vlsm-subnets-table th {
-    padding: 10px 6px;
-    font-size: 0.7rem;
-  }
-
-  .vlsm-subnets-table td {
-    padding: 10px 6px;
-    font-size: 0.8rem;
-  }
-
-  .vlsm-index {
-    width: 30px;
-  }
-
-  .vlsm-network,
-  .vlsm-first-ip,
-  .vlsm-last-ip,
-  .vlsm-broadcast {
-    min-width: 100px;
-    font-size: 0.75rem;
-  }
+  .vlsm-info p { font-size: 0.82rem; }
 
   .vlsm-explanation {
     padding: 12px;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
   }
 
   .vlsm-explanation ol {
-    margin: 8px 0 0 0;
+    margin: 8px 0 0;
     padding-left: 20px;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
   }
 
   .subnet-details {
     grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    padding: 12px;
+    gap: 8px;
+    padding: 10px;
   }
 
   .detail-item {
-    padding: 6px;
-    border-radius: 4px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 0.82rem;
+  }
+
+  .copy-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .row-copy-btn {
+    width: 32px;
+    height: 32px;
   }
 }
 
-/* Mobile - Small devices (480px - 768px) */
+/* ===== MOBILE 480px ===== */
 @media (max-width: 480px) {
   .result-display {
-    gap: 12px;
+    gap: 10px;
   }
 
   .result-error {
     padding: 16px 12px;
-    border-radius: 8px;
+    border-radius: 10px;
   }
 
-  .error-icon {
-    font-size: 2rem;
-    margin-bottom: 10px;
-  }
+  .error-icon svg { width: 36px; height: 36px; }
 
   .result-error h3 {
-    font-size: 1rem;
-    margin-bottom: 6px;
+    font-size: 0.95rem;
+    margin: 8px 0 4px;
   }
 
   .result-error p {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
 
   .result-section {
-    padding: 14px;
-    border-radius: 8px;
-    margin-bottom: 12px;
+    padding: 12px;
+    border-radius: 10px;
   }
 
   .section-header {
-    gap: 10px;
-    margin-bottom: 12px;
+    gap: 8px;
+    margin-bottom: 10px;
   }
 
   .section-header h3 {
-    font-size: 1rem;
+    font-size: 0.92rem;
     line-height: 1.2;
   }
 
   .binary-toggle {
-    width: 100%;
     padding: 10px 12px;
-    font-size: 0.8rem;
-    min-height: 40px;
+    font-size: 0.78rem;
+    min-height: 44px;
   }
 
   .info-grid {
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 8px;
   }
 
   .info-item {
@@ -1089,7 +1044,7 @@
   }
 
   .info-item label {
-    font-size: 0.65rem;
+    font-size: 0.62rem;
   }
 
   .value-row {
@@ -1097,112 +1052,108 @@
   }
 
   .value {
-    font-size: 0.95rem;
+    font-size: 0.88rem;
   }
 
   .binary {
-    font-size: 0.7rem;
-    padding: 6px;
-    margin-top: 6px;
+    font-size: 0.65rem;
+    padding: 5px 6px;
+    margin-top: 4px;
+    line-height: 1.3;
   }
 
   .copy-btn {
-    padding: 6px 10px;
-    font-size: 0.9rem;
+    width: 30px;
+    height: 30px;
   }
 
   .subnet-info-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
+    gap: 6px;
   }
 
   .subnet-info-item {
-    padding: 8px;
-    text-align: center;
+    padding: 8px 4px;
     border-radius: 6px;
   }
 
   .subnet-info-item label {
-    font-size: 0.65rem;
+    font-size: 0.58rem;
   }
 
   .subnet-info-item .value {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
 
   .explanation-box {
     padding: 10px 12px;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     border-radius: 6px;
   }
 
   .explanation-box p {
-    margin: 6px 0 0 0;
-    line-height: 1.5;
+    margin: 4px 0 0;
+    line-height: 1.45;
+    font-size: 0.78rem;
   }
 
   .alert {
-    padding: 12px;
+    padding: 10px 12px;
     border-radius: 6px;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
 
-  .vlsm-subnets-cards {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
+  .vlsm-subnets-cards,
   .subnets-cards {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 10px;
   }
 
   .subnet-card {
-    padding: 14px;
+    padding: 12px;
     border-radius: 8px;
-    gap: 12px;
   }
 
   .subnet-card-header {
     gap: 6px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     padding-bottom: 8px;
   }
 
   .subnet-card-header h4 {
-    font-size: 0.95rem;
+    font-size: 0.88rem;
   }
 
   .subnet-prefix-badge {
     padding: 3px 8px;
-    font-size: 0.75rem;
-    border-radius: 16px;
+    font-size: 0.72rem;
+    border-radius: 14px;
   }
 
   .card-section {
-    padding: 10px;
+    padding: 8px;
     border-radius: 6px;
-    gap: 8px;
+    gap: 6px;
   }
 
   .info-row {
     grid-template-columns: 1fr;
-    gap: 8px;
+    gap: 6px;
   }
 
   .info-col,
   .info-full {
-    gap: 4px;
+    gap: 3px;
   }
 
   .info-col label,
   .info-full label {
-    font-size: 0.6rem;
+    font-size: 0.58rem;
   }
 
   .info-col .value,
   .info-full .value {
-    font-size: 0.85rem;
+    font-size: 0.82rem;
   }
 
   .copy-cell {
@@ -1211,15 +1162,15 @@
   }
 
   .small-copy-btn {
-    padding: 3px 6px;
+    padding: 4px 6px;
     font-size: 0.65rem;
-    min-height: 26px;
-    border-radius: 3px;
+    min-height: 28px;
+    border-radius: 4px;
   }
 
   .reference-grid {
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 8px;
   }
 
   .reference-item {
@@ -1228,54 +1179,37 @@
   }
 
   .reference-item strong {
-    font-size: 0.7rem;
-    margin-bottom: 6px;
+    font-size: 0.65rem;
+    margin-bottom: 4px;
   }
 
   .reference-item p {
-    font-size: 0.95rem;
+    font-size: 0.88rem;
   }
 
   .summary-grid {
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 8px;
   }
 
   .summary-item {
     padding: 10px;
-    flex-direction: column;
-    justify-content: flex-start;
-    gap: 4px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
   }
 
-  .summary-item .label {
-    font-size: 0.75rem;
+  .summary-item .label { font-size: 0.75rem; }
+  .summary-item .value { font-size: 0.95rem; }
+
+  .vlsm-info {
+    padding: 10px;
   }
 
-  .summary-item .value {
-    font-size: 1.05rem;
-  }
-
-  .vlsm-subnets-table {
-    font-size: 0.75rem;
-  }
-
-  .vlsm-subnets-table th {
-    padding: 8px 4px;
-    font-size: 0.65rem;
-  }
-
-  .vlsm-subnets-table td {
-    padding: 8px 4px;
-    font-size: 0.75rem;
-  }
-
-  .vlsm-network,
-  .vlsm-first-ip,
-  .vlsm-last-ip,
-  .vlsm-broadcast {
-    min-width: 90px;
-    font-size: 0.7rem;
+  .vlsm-info p {
+    font-size: 0.78rem;
+    line-height: 1.5;
   }
 
   .vlsm-explanation {
@@ -1284,66 +1218,596 @@
   }
 
   .vlsm-explanation ol {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
+    padding-left: 18px;
   }
 
   .vlsm-explanation li {
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
 
   .subnet-details {
     grid-template-columns: 1fr;
-    gap: 8px;
-    padding: 10px;
+    gap: 6px;
+    padding: 8px;
   }
 
   .detail-item {
-    padding: 6px;
+    padding: 6px 8px;
     border-radius: 4px;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
+  }
+
+  .row-copy-btn {
+    width: 32px;
+    height: 32px;
   }
 }
 
-/* Extra Small devices (< 380px) */
+/* Efficiency color coding */
+.net-field .efficiency-value.eff-red {
+  color: #dc2626;
+}
+
+.net-field .efficiency-value.eff-orange {
+  color: #ea880c;
+}
+
+.net-field .efficiency-value.eff-green {
+  color: #16a34a;
+}
+
+/* ========== Compact Network Info Grid ========== */
+
+.net-info-compact {
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--bg-primary);
+}
+
+.net-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.net-row:last-child {
+  border-bottom: none;
+}
+
+.net-field {
+  padding: 10px 14px;
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.net-field:last-child {
+  border-right: none;
+}
+
+.net-field label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+
+.net-val {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.net-val .value {
+  font-size: 0.95rem;
+}
+
+.net-field > .value {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: 'Monaco', 'Courier New', monospace;
+}
+
+.net-val .copy-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+}
+
+.net-field .binary {
+  font-size: 0.65rem;
+  padding: 4px 6px;
+  margin-top: 2px;
+}
+
+@media (max-width: 768px) {
+  .net-info-compact {
+    border-radius: 10px;
+  }
+
+  .net-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .net-field {
+    padding: 9px 12px;
+    gap: 3px;
+  }
+
+  .net-field label {
+    font-size: 0.58rem;
+  }
+
+  .net-field:nth-child(2) {
+    border-right: none;
+  }
+
+  .net-field:last-child {
+    grid-column: 1 / -1;
+    border-right: none;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .net-val {
+    gap: 8px;
+  }
+
+  .net-val .value {
+    font-size: 0.88rem;
+  }
+
+  .net-field > .value {
+    font-size: 0.88rem;
+  }
+
+  .net-val .copy-btn {
+    width: 28px;
+    height: 28px;
+  }
+
+  .net-field .binary {
+    font-size: 0.58rem;
+    padding: 3px 5px;
+  }
+
+  .range-sep {
+    margin: 0 2px;
+  }
+}
+
+@media (max-width: 480px) {
+  .net-info-compact {
+    border-radius: 8px;
+  }
+
+  .net-row {
+    grid-template-columns: 1fr;
+  }
+
+  .net-field {
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+    padding: 10px 12px;
+    gap: 3px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .net-field label {
+    font-size: 0.62rem;
+    flex-shrink: 0;
+    min-width: 80px;
+  }
+
+  .net-field:last-child {
+    border-bottom: none;
+    border-top: none;
+    grid-column: auto;
+  }
+
+  .net-row:last-child .net-field:last-child {
+    border-bottom: none;
+  }
+
+  .net-val {
+    gap: 6px;
+    justify-content: flex-end;
+  }
+
+  .net-val .value {
+    font-size: 0.82rem;
+    text-align: right;
+  }
+
+  .net-field > .value {
+    font-size: 0.82rem;
+    text-align: right;
+  }
+
+  .net-val .copy-btn {
+    width: 28px;
+    height: 28px;
+  }
+
+  .net-field .binary {
+    font-size: 0.55rem;
+    padding: 3px 4px;
+    margin-top: 0;
+  }
+
+  .net-field.has-binary,
+  .net-field:has(.binary) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .net-field.has-binary .net-val,
+  .net-field:has(.binary) .net-val {
+    justify-content: space-between;
+  }
+}
+
+/* ========== Subnets Table Layout ========== */
+
+.subnets-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-primary);
+}
+
+.subnets-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
+
+.subnets-table thead {
+  background: var(--bg-secondary);
+}
+
+.subnets-table th {
+  padding: 8px 10px;
+  text-align: left;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.subnets-table th:last-child {
+  width: 44px;
+}
+
+.subnets-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: middle;
+}
+
+.subnets-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.subnet-table-row {
+  transition: background-color 0.15s ease;
+}
+
+.subnet-table-row:hover {
+  background-color: rgba(37, 99, 235, 0.05);
+}
+
+.subnet-id-cell {
+  white-space: nowrap;
+}
+
+.subnet-idx {
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-right: 8px;
+  font-size: 0.95rem;
+}
+
+.table-badge {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+}
+
+.mono-cell {
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.ip-range-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.range-sep {
+  color: var(--text-secondary);
+  margin: 0 4px;
+  font-weight: 400;
+}
+
+.table-info-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-size: inherit;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: color 0.15s ease;
+  border-bottom: 1px dashed transparent;
+}
+
+.table-info-btn:hover {
+  color: var(--primary-color);
+  border-bottom-color: var(--primary-color);
+}
+
+.table-info-btn.highlight {
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+.table-info-btn.highlight:hover {
+  color: var(--primary-dark);
+  border-bottom-color: var(--primary-dark);
+}
+
+.hosts-cell {
+  text-align: center;
+}
+
+.copy-cell-td {
+  text-align: center;
+  width: 44px;
+}
+
+.row-copy-btn {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.row-copy-btn:hover {
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+  background: rgba(37, 99, 235, 0.06);
+}
+
+.row-copy-btn:active {
+  transform: scale(0.9);
+}
+
+/* Responsive table: stacked card layout on mobile */
+@media (max-width: 768px) {
+  .subnets-table-wrap {
+    border: none;
+    border-radius: 0;
+    overflow: visible;
+    background: transparent;
+  }
+
+  .subnets-table,
+  .subnets-table tbody {
+    display: block;
+  }
+
+  .subnets-table thead {
+    display: none;
+  }
+
+  .subnets-table tr {
+    display: block;
+    margin-bottom: 10px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .subnets-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border-color);
+    min-height: 40px;
+  }
+
+  .subnets-table td:last-child {
+    border-bottom: none;
+  }
+
+  .subnets-table td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+    margin-right: 12px;
+    min-width: 72px;
+  }
+
+  .subnets-table td.subnet-id-cell {
+    background: linear-gradient(135deg, var(--bg-secondary), rgba(37, 99, 235, 0.04));
+    padding: 10px 14px;
+    border-bottom: 2px solid var(--border-color);
+    min-height: 44px;
+  }
+
+  .subnets-table td.copy-cell-td {
+    justify-content: center;
+    border-bottom: none;
+    padding: 6px 14px 10px;
+    background: var(--bg-secondary);
+  }
+
+  .subnets-table td.copy-cell-td::before {
+    display: none;
+  }
+
+  .subnets-table td.copy-cell-td .row-copy-btn {
+    width: 100%;
+    max-width: 200px;
+    height: 36px;
+    border-radius: 8px;
+    gap: 6px;
+    font-size: 0.75rem;
+  }
+
+  .ip-range-content {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 1px;
+  }
+
+  .mono-cell {
+    white-space: normal;
+    word-break: break-all;
+    font-size: 0.82rem;
+  }
+
+  .table-info-btn {
+    font-size: 0.82rem;
+    padding: 2px 0;
+  }
+
+  .hosts-cell {
+    text-align: right;
+  }
+}
+
+@media (max-width: 480px) {
+  .subnets-table tr {
+    margin-bottom: 8px;
+    border-radius: 8px;
+  }
+
+  .subnets-table td {
+    padding: 8px 12px;
+    font-size: 0.78rem;
+    min-height: 38px;
+  }
+
+  .subnets-table td::before {
+    font-size: 0.55rem;
+    min-width: 64px;
+    margin-right: 8px;
+  }
+
+  .subnets-table td.subnet-id-cell {
+    padding: 8px 12px;
+  }
+
+  .subnet-idx {
+    font-size: 0.88rem;
+  }
+
+  .table-badge {
+    font-size: 0.65rem;
+    padding: 2px 6px;
+  }
+
+  .table-info-btn {
+    font-size: 0.78rem;
+  }
+
+  .mono-cell {
+    font-size: 0.78rem;
+  }
+
+  .range-sep {
+    margin: 0 2px;
+  }
+
+  .subnets-table td.copy-cell-td {
+    padding: 6px 12px 8px;
+  }
+}
+
+/* Extra Small devices (< 375px) */
 @media (max-width: 375px) {
   .result-section {
-    padding: 12px;
+    padding: 10px;
+    border-radius: 8px;
   }
 
   .section-header h3 {
-    font-size: 0.95rem;
+    font-size: 0.88rem;
   }
 
   .subnet-card-header h4 {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
 
   .subnet-prefix-badge {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
   }
 
   .info-col label,
   .info-full label,
   .subnet-info-item label {
-    font-size: 0.6rem;
+    font-size: 0.55rem;
   }
 
   .value {
-    font-size: 0.9rem;
+    font-size: 0.82rem;
   }
 
   .subnet-info-item .value {
-    font-size: 1rem;
-  }
-
-  .copy-btn,
-  .small-copy-btn {
-    padding: 3px 6px;
-    font-size: 0.6rem;
+    font-size: 0.92rem;
   }
 
   .binary-toggle {
     padding: 8px 10px;
     font-size: 0.75rem;
+  }
+
+  .subnets-table td {
+    padding: 7px 10px;
+  }
+
+  .subnets-table td::before {
+    font-size: 0.52rem;
+    min-width: 56px;
+  }
+
+  .net-field label {
+    font-size: 0.55rem;
+    min-width: 68px;
+  }
+
+  .net-val .value,
+  .net-field > .value {
+    font-size: 0.78rem;
   }
 }

@@ -85,6 +85,7 @@
     "allocatedSize": "Վճռարկված չափ",
     "firstIp": "Առաջին IP",
     "lastIp": "Վերջին IP",
+    "ipRange": "IP Տիրույթ",
     "summary": "Ամփոփում",
     "subnetsCreated": "Ստեղծված ենթացանցեր:",
     "ipsUsed": "Օգտագործված IP:",

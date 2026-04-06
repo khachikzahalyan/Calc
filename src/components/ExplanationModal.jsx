@@ -111,15 +111,15 @@ const ExplanationModal = ({ isOpen, onClose, type, data }) => {
             `/${prefix} = ${networkBits} ${t('formula.networkBits')} (${t('formula.ones')}) + ${hostBits} ${t('formula.hostBits')} (${t('formula.zeros')})`,
             `${t('formula.binary')}: ${generateBinary()}`,
             `${t('formula.decimalRepresentation')}: ${data.value}`,
-            `Итого адресов: ${data.totalIps}, можно использовать ${data.usableHosts} ${t('formula.usableHostAddresses')}`,
+            `${t('formula.totalIpAddresses')}: ${data.totalIps}, ${t('formula.allowsFor')} ${data.usableHosts} ${t('formula.usableHostAddresses')}`,
           ],
-          example: `Для /${prefix}:
-• Сетевые биты: ${networkBits} (определяют сеть)
-• Хост биты: ${hostBits} (определяют хост в сети)
-• Маска: ${data.value}
-• Всего адресов: ${data.totalIps}
-• Можно использовать: ${data.usableHosts}
-• На ${data.usableHosts} устройств`
+          example: `${t('formula.forPrefix')} /${prefix}:
+• ${t('formula.networkBits')}: ${networkBits} (${t('formula.identifyNetwork')})
+• ${t('formula.hostBits')}: ${hostBits} (${t('formula.identifyHost')})
+• ${t('formula.subnetMask')}: ${data.value}
+• ${t('formula.totalIpAddresses')}: ${data.totalIps}
+• ${t('formula.usableHosts')}: ${data.usableHosts}
+• ${t('formula.meansCanHave').replace('{devices}', data.usableHosts)}`
         };
       }
       case 'networkAddress': {
@@ -157,7 +157,7 @@ const ExplanationModal = ({ isOpen, onClose, type, data }) => {
 • ${t('formula.lastAddressNetwork')}
 • ${t('formula.usedSendMessagesAll')}
 • ${t('formula.cannotAssignDevice')}
-• ${t('formula.networkSize')}: ${data.totalIps} ${t('formula.totalIpsLabel')}
+• ${t('formula.networkSize')}: ${data.totalIps} ${t('modal.totalIpsLabel')}
 • ${t('formula.firstIp')}: ${data.firstUsableIp}
 • ${t('formula.lastIp')}: ${data.lastUsableIp}
 • ${t('formula.broadcast')}: ${data.value}`
@@ -173,7 +173,7 @@ const ExplanationModal = ({ isOpen, onClose, type, data }) => {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose} aria-label="Close modal">✕</button>
+        <button className="modal-close" onClick={onClose} aria-label={t('modal.close')}>✕</button>
         
         <h2 className="modal-title">{content.title}</h2>
         
@@ -187,7 +187,7 @@ const ExplanationModal = ({ isOpen, onClose, type, data }) => {
                 onClick={() => navigator.clipboard.writeText(content.value)}
                 title={t('modal.copyToClipboard')}
               >
-                📋 {t('modal.copy')}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> {t('modal.copy')}
               </button>
             </div>
           </div>
