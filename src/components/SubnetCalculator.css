@@ -345,24 +345,6 @@
   margin: 0;
 }
 
-/* Footer */
-.calculator-footer {
-  text-align: center;
-  margin-top: 40px;
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 0.875rem;
-  max-width: 1400px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.calculator-footer p {
-  margin: 0;
-}
-
-/* Responsive Design */
-
-/* Tablet */
 @media (max-width: 1024px) {
   .calculator-container {
     grid-template-columns: 1fr;
@@ -460,10 +442,7 @@
     margin-top: 16px;
   }
 
-  .calculator-footer {
-    margin-top: 24px;
-    font-size: 0.8rem;
-  }
+
 }
 
 /* Mobile - Small devices (480px - 768px) */

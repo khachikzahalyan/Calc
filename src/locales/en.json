@@ -265,8 +265,6 @@
     "hy": "Հայերեն"
   },
 
-  "footer": "Built with React • All calculations use bitwise operations • No external libraries",
-
   "error": {
     "invalidIpAddress": "Invalid IP address",
     "invalidPrefix": "Invalid prefix (use 0-32)",

@@ -278,10 +278,7 @@ const SubnetCalculator = () => {
         </div>
       </div>
 
-      {/* Footer */}
-      <div className="calculator-footer">
-        <p>{t('footer')}</p>
-      </div>
+
     </div>
   );
 };
